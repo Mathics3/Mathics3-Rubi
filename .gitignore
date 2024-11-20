@@ -1,0 +1,12 @@
+.idea/
+.mypy_cache
+.project
+.pydevproject
+.settings
+.vscode
+/.cache
+/.gdbinit
+/pycache
+build/
+dist/
+tmp/
