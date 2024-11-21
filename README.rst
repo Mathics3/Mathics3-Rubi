@@ -1,9 +1,6 @@
 This is a copy of `Rubi <https://rulebasedintegration.org>`_, a Rule-based Integrator written for WMA.
 
-The code in this repository runs in Mathics3 though. Perhaps one day, this will not be needed.
-
-But for the time being, it is very expedient.
-
+The code in this repository runs in Mathics3 though. Perhaps one day, this will not be needed. But for the time being, it is very expedient.
 
 To run from inside Mathics3:
 
