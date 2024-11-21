@@ -2,9 +2,7 @@ This is a copy of `Rubi <https://rulebasedintegration.org>`_, a Rule-based Integ
 
 The code in this repository runs in Mathics3 though. Perhaps one day, this will not be needed. But for the time being, it is very expedient.
 
-To run from inside Mathics3:
-
-..code:: bash
+To run from inside Mathics3::
 
         $ git clone -b rubi git@github.com:Mathic3/Mathics3-Rubi.git
         $ cd Mathics3-Rubi
@@ -14,9 +12,6 @@ To run from inside Mathics3:
         Mathics 7.0.1dev0
         on CPython 3.11.10 ...
         ...
-
-..code:: mathematica
-
         In[1]:= << Rubi.m
         Loading Rubi 4.17.3.0 will take a minute or two. In the future this will take less than a second
 	.
