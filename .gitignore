@@ -6,6 +6,7 @@
 .vscode
 /.cache
 /.gdbinit
+/.python-version
 /pycache
 build/
 dist/
