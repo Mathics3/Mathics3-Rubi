@@ -184,6 +184,9 @@ Unprotect[ReplacePart];
 ReplacePart[x_, pos_, val_] := ReplacePart[x, pos->val];
 Protect[ReplacePart];
 
+(* Define a working definition for Refine *)
+Refine[x_] := Simplify[x];
+
 (* ::Section:: *)
 (* Define Unintegrable and CannotIntegrate*)
 
