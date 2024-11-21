@@ -1,6 +1,6 @@
-This is a copy of `Rubi <https://rulebasedintegration.org>`_, a Rule-based Integrator written for WMA.
+This is a copy of  `Rubi <https://rulebasedintegration.org>`_, a Rule-based Integrator written for WMA.
 
-The code in this repository runs in Mathics3 though. Perhaps one day, this will not be needed. But for the time being, it is very expedient.
+The version 4.17. or code in this repository runs in Mathics3 though. Perhaps one day, this will not be needed. But for the time being, it is very expedient.
 
 To run from inside Mathics3::
 
@@ -30,14 +30,16 @@ To run from inside Mathics3::
         In[2]:= Int[(b x + a)^m, x]
         Out[2]= (a + b x) ^ (1 + m) / (b ( + m))
 
-        In[3]:=Int[x, x]
+        In[3]:= Int[x, x]
         Out[3]= x ^ 2 / 2
 
         In[4]:= Int[(a + x)^2, x]
         Out[4]= (a + x) ^ 3 /
 
-        In[5]:=Int[x^3, x]
+        In[5]:= Int[x^3, x]
         Out[5]= x ^ 4 / 4
 
         In[6]:= Int[(a + x)^m, x]
         Out[6]= (a + x) ^ (1 + m) / (1 +m)
+
+Tests were taken from Rubi's `Integration Test-suites <https://rulebasedintegration.org/testProblems.html>`_ Mathematica syntax.
