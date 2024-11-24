@@ -187,6 +187,11 @@ Protect[ReplacePart];
 (* Define a working definition for Refine *)
 Refine[x_] := Simplify[x];
 
+(* Fix conditions within With -- needs a full fix within the pattern library *)
+Unprotect[With];
+With[vars_, Verbatim[Condition][expr_, wcond_]] := Condition[With[vars, expr], With[vars, wcond]];
+Protect[With];
+
 (* ::Section:: *)
 (* Define Unintegrable and CannotIntegrate*)
 
