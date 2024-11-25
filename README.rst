@@ -4,7 +4,7 @@ The version 4.17. or code in this repository runs in Mathics3 though. Perhaps on
 
 To run from inside Mathics3::
 
-        $ git clone -b rubi git@github.com:Mathic3/Mathics3-Rubi.git
+        $ git clone git@github.com:Mathic3/Mathics3-Rubi.git
         $ cd Mathics3-Rubi
 
         $ mathics
