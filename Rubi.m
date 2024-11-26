@@ -175,7 +175,6 @@ LoadRules[FileNameJoin[{"1 Algebraic functions", "1.3 Polynomial products", "1.3
 LoadRules[FileNameJoin[{"1 Algebraic functions", "1.3 Polynomial products", "1.3.4 P(x) Q(x)^p"}]];
 
 LoadRules[FileNameJoin[{"1 Algebraic functions", "1.4 Miscellaneous", "1.4.3 Miscellaneous algebraic functions"}]];
-LoadRules[FileNameJoin[{"9 Miscellaneous", "9.2 Piecewise linear functions"}]];
 
 FixIntRules[];
 
