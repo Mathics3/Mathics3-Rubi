@@ -175,7 +175,6 @@ LoadRules[FileNameJoin[{"1 Algebraic functions", "1.3 Polynomial products", "1.3
 LoadRules[FileNameJoin[{"1 Algebraic functions", "1.3 Polynomial products", "1.3.4 P(x) Q(x)^p"}]];
 
 LoadRules[FileNameJoin[{"1 Algebraic functions", "1.4 Miscellaneous", "1.4.3 Miscellaneous algebraic functions"}]];
-LoadRules[FileNameJoin[{"9 Miscellaneous", "9.2 Piecewise linear functions"}]];
 
 FixIntRules[];
 
@@ -186,6 +185,11 @@ Protect[ReplacePart];
 
 (* Define a working definition for Refine *)
 Refine[x_] := Simplify[x];
+
+(* Fix conditions within With -- needs a full fix within the pattern library *)
+Unprotect[With];
+With[vars_, Verbatim[Condition][expr_, wcond_]] := Condition[With[vars, expr], With[vars, wcond]];
+Protect[With];
 
 (* ::Section:: *)
 (* Define Unintegrable and CannotIntegrate*)
