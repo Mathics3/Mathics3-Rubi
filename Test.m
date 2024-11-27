@@ -12,8 +12,8 @@ BeginPackage["IntegrationTestProgram`"];
 
 
 TestRubi::usage = "If <testSuite> is the name of a file in the integration test suite, TestRubi[testSuite] tests Rubi on the problems in <testSuite> and creates a notebook of the deficient results. If <testSuite> is the name of a directory in the integration test suite, TestRubi[testSuite] tests Rubi on the each of the files in <testSuite>. TestRubi[testSuite,True] saves the deficient results as the file testSuite.nb in a directory named \"Rubi Integration Test Results\".";
-TestMathematica::usage = "If <testSuite> is the name of a file in the integration test suite, TestMathematica[testSuite] tests Mathematica's built-in integrator on the problems in <testSuite> and creates a notebook of the deficient results. If <testSuite> is the name of a directory in the integration test suite, TestMathematica[testSuite] tests Mathematica on the each of the files in <testSuite>. TestMathematica[testSuite,True] saves the deficient results as the file testSuite.nb in a directory named \"Mathematica Integration Test Results\".";
-TestMathics::usage = "Test the <testSuit>s implemented in Mathics.";
+TestFileRubi::usage = "TestFileRubi[filename] tests Rubi on the integration problems in filename.";
+TestMathics::usage = "Test all test suits implemented in Mathics.";
 
 $PrintProblems::usage = "If $PrintProblems is True, problems are displayed before they are integrated. It is False by default.";
 $TestOnlyElementary::usage = "If $TestOnlyElementary is True, only problems having elementary integrands AND antiderivatives are tested. It is False by default.";
@@ -73,7 +73,6 @@ TestRubi[testSuite_String, saveFlag_:False] :=
 (* ::Subsection::Closed:: *)
 (*TestFileRubi[filename]*)
 
-TestFileRubi::usage = "TestFileRubi[filename] tests Rubi on the integration problems in filename.";
 TestFileRubi[filename_String] := 
   Module[{problemlist, num, indx},
   problemlist = ReadList[filename];
@@ -337,12 +336,12 @@ DisplayTestResult[message_String, num_Integer, integrand_, variable_, stepsrequi
 
 DisplayProblem::usage = "DisplayProblem[num, integrand, variable] displays integration problem number num.";
 DisplayProblem[num_Integer, integrand_, variable_] := (
-  Print["Problem "<>ToString[num]<>":", "Subsection"];
-  Print[Defer[Integrate[integrand, variable]], "Output"] )
+  Print["Problem "<>ToString[num]<>":"];
+  Print[Defer[Integrate[integrand, variable]]] )
 
 DisplayProblem[num_Integer, integrand_, variable_, message_String] := (
-  Print["Problem "<>ToString[num]<>": "<>message, "Subsection"];
-  Print[Defer[Integrate[integrand, variable]], "Output"] )
+  Print["Problem "<>ToString[num]<>": "<>message];
+  Print[Defer[Integrate[integrand, variable]]] )
 
 (* ::Subsection::Closed:: *)
 (*PrintText[text, fontsize]*)
