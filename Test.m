@@ -41,158 +41,7 @@ ExpressionType::usage = "ExpressionType[expn,var] returns expn's type number bas
 
 Begin["`Private`"];
 
-
 $IntegrationTestProgramDir = Directory[];
-
-
-(* ::Subsection::Closed:: *)
-(*TestMathematica[testSuite, saveFlag]*)
-
-
-TestMathematica[testSuite_String, saveFlag_:False] := 
-  With[{path=FileNameJoin[{$IntegrationTestProgramDir, "Integration Test Suite", testSuite}]},
-  If[Not[DirectoryQ[path] || FileExistsQ[path] || FileExistsQ[path<>".m"]],
-    Print["\""<>testSuite<>"\" is not a test suite file or directory name."],
-  Block[{$OptimalCounter=0, $TooLargeCounter=0, $ComplexCounter=0, $CannotIntegrateCounter=0, $TimeoutCounter=0,
-    $SizeRatioTotal=0, $SizeRatioCounter=0, $HideKnownDeficiencies=False, $ResultNotebook},
-  With[{systemName="Mathematica "<>StringTrim[ToString[$VersionNumber],"."]},
-  $ResultNotebook = CreateDocument[{}, WindowTitle->testSuite, WindowSize->Scaled[1]];
-  Print[systemName<>" Integration Test Results", "Title", 36, True];
-  Print[
-    "on "<>If[NumberQ[$PercentToTest] && 0<$PercentToTest<100, ToString[$PercentToTest]<>"% of ", ""]<>"the "<>
-    If[TrueQ[$TestOnlyElementary], "elementary ", ""]<>
-    "problems in "<>If[testSuite==="", "the entire integration test-suite", "\""<>testSuite<>"\""], "Subtitle", 32, True];
-  If[DirectoryQ[path], Map[TestFileMathematica, FileNames["*.m", {path}, Infinity]], TestFileMathematica[If[FileExistsQ[path], path, path<>".m"]]];
-  WriteMathematicaTestSummary[];
-  If[TrueQ[saveFlag],
-    SaveAndCloseNotebook[$ResultNotebook, FileNameJoin[{NotebookDirectory[], systemName<>" Integration Test Results", testSuite}], True],
-  Null]]]]]
-
-
-(* ::Subsection::Closed:: *)
-(*TestFileMathematica[filename]*)
-
-
-TestFileMathematica::usage = "TestFileMathematica[filename] tests Mathematica on the integration problems in filename.";
-TestFileMathematica[filename_String] := 
-  Module[{problemlist, num, indx},
-  problemlist = ReadList[filename];
-  If[problemlist===$Failed,
-    Print["Test file "<>filename<>" not found."];
-    Null,
-  problemlist = Select[problemlist,Function[#=!=Null]];
-  If[problemlist==={},
-    Null,
-
-  ( If[TrueQ[$TestOnlyElementary],
-      problemlist = Select[problemlist, Function[ExpressionType[#[[1]],#[[2]]]<=3 && ExpressionType[#[[4]],#[[2]]]<=3]]] );
-
-  num = Length[problemlist];
-  ( If[NumberQ[$PercentToTest] && 0<$PercentToTest<100 && num>5,
-      SeedRandom[314159265]; RandomInteger[100000]; RandomInteger[100000];
-      problemlist = Part[problemlist,Sort[RandomSample[Range[num],Max[5,Ceiling[num*$PercentToTest/100]]]]];
-      num = Length[problemlist];
-      Print["Test results for " <> ToString[num] <> " problems in \"" <> FileNameTake[filename] <> "\"", "Section", 24];
-      Print["Testing Mathematica on " <> ToString[num] <> " problems in \"" <> FileNameTake[filename] <> "\"."],
-    Print["Test results for the " <> ToString[num] <> " problems in \"" <> FileNameTake[filename] <> "\"", "Section", 24];
-    Print["Testing Mathematica on the " <> ToString[num] <> " problems in \"" <> FileNameTake[filename] <> "\"."]] );
-
-  Monitor[
-    Do[TestProblemMathematica[indx, problemlist[[indx]]], {indx, 1, num}],
-    ProgressIndicator[indx, {1, num+1}, ImageSize->{1000,20}]];
-  Print[""]]]]
-
-
-(* ::Subsection::Closed:: *)
-(*TestProblemMathematica[num, problem]*)
-
-
-TestProblemMathematica::usage =
- "num is the number of the problem in the file being tested.
-  problem is the integration problem in the form of a 4 or 5 element list:
-    {integrand, variable, stepsrequired, optimal antiderivative, N/A (optional)}.
-  If the result of Mathematica's integration of integrand wrt variable is not optimal,
-    TestProblemMathematica[num, problem] explains the deficiency and displays the problem and nonoptimal result.";
-TestProblemMathematica[num_, problem_]:=
-  With[{integrand=problem[[1]], variable=problem[[2]], stepsrequired=problem[[3]], optimal1=problem[[4]]},
-  If[TrueQ[$PrintProblems], DisplayProblem[num, integrand, variable]];
-  Block[{integrationtime, result},
-    ClearSystemCache[];
-    {integrationtime,result} = TimeConstrained[Timing[Integrate[integrand,variable]],$TimeOutLimit,{0,"Timed out"}];
-
-    If[result==="Timed out",
-	  $TimeoutCounter++;
-      DisplayTestResult["Attempted integration timed out after "<>ToString[$TimeOutLimit]<>" seconds.", 
-        num, integrand, variable, stepsrequired, Null, optimal1, "???"],
-
-    With[{resultsize=LeafCount[result], optimalsize=LeafCount[optimal1]},
-    If[resultsize>200000,
-      $TooLargeCounter++;
-      DisplayTestResult["Humongous result has more than 200000 leaves.", 
-        num, integrand, variable, stepsrequired, Null, optimal1, result],
-
-    With[{sizeratio=N[resultsize/optimalsize]},
-
-    With[{resulttype=ExpressionType[result,variable], optimaltype=ExpressionType[optimal1,variable]},
-    If[resulttype>optimaltype,
-      If[resulttype<=6,
-        $ComplexCounter++;
-        If[resultsize<=2*optimalsize,
-          DisplayTestResult["Result unnecessarily involves higher level functions.", 
-            num, integrand, variable, stepsrequired, Null, optimal1, result],
-        DisplayTestResult["Result unnecessarily involves higher level functions and "<>ToString[NumberForm[sizeratio,{10,2}]]<>" times size of optimal antiderivative.", 
-          num, integrand, variable, stepsrequired, Null, optimal1, result]],
-	  $CannotIntegrateCounter++;
-      DisplayTestResult[If[resulttype==7, "Result is not expressed in closed-form.", "Unable to integrate problem."], 
-        num, integrand, variable, stepsrequired, Null, optimal1, result]],
-
-    If[resulttype<optimaltype,
-	  $OptimalCounter++;
-      If[resulttype<=6 && ExpressionType[integrand,variable]<optimaltype && FreeQ[result,HypergeometricPFQ],
-        DisplayTestResult["Mathematica result simpler than optimal antiderivative, IF it can be verified!", 
-          num, integrand, variable, stepsrequired, Null, optimal1, result]],
-
-    $SizeRatioCounter++;
-    $SizeRatioTotal=sizeratio+$SizeRatioTotal;
-    If[Xor[ComplexFreeQ[result], ComplexFreeQ[optimal1]],
-      If[ComplexFreeQ[optimal1],
-        $ComplexCounter++;
-        If[resultsize<=2*optimalsize,
-          DisplayTestResult["Result unnecessarily involves imaginary or complex numbers.", 
-            num, integrand, variable, stepsrequired, Null, optimal1, result],
-        DisplayTestResult["Result unnecessarily involves complex numbers and "<>ToString[NumberForm[sizeratio,{10,2}]]<>" times size of optimal antiderivative.", 
-          num, integrand, variable, stepsrequired, Null, optimal1, result]],
-	  $OptimalCounter++ (*;
-      If[resulttype<=6 && FreeQ[result,HypergeometricPFQ],
-        DisplayTestResult["Mathematica result simpler than optimal antiderivative, IF it can be verified!", 
-          num, integrand, variable, stepsrequired, Null, optimal1, result]] *)],
-
-    If[resultsize<=2*optimalsize,
-	  $OptimalCounter++,
-    $TooLargeCounter++;
-    DisplayTestResult["Result "<>ToString[NumberForm[sizeratio,{10,2}]]<>" times size of optimal antiderivative.", 
-      num, integrand, variable, stepsrequired, Null, optimal1, result]]]]]]]]]]]]
-
-
-(* ::Subsection::Closed:: *)
-(*WriteMathematicaTestSummary[]*)
-
-
-WriteMathematicaTestSummary[] := (
-  Print["Summary of "<>"Integration Test Results", "Section", 28, False, True];
-  PrintText[ToString[$OptimalCounter+$TooLargeCounter+$ComplexCounter+$CannotIntegrateCounter+$TimeoutCounter]<>" integration problems", 16];
-  Print[PieChart[{$OptimalCounter,$TooLargeCounter,$ComplexCounter,$CannotIntegrateCounter,$TimeoutCounter}, 
-		ChartLabels->{"A", "B", "C", "D", "E"}, 
-		ChartStyle->{RGBColor[0,0.8,0],RGBColor[0.7,1,0],Yellow,Orange,Red}], "Text", 12];
-  PrintText["A - "<>ToString[$OptimalCounter]<>" optimal antiderivatives", 16];
-  PrintText["B - "<>ToString[$TooLargeCounter]<>" more than twice size of optimal antiderivatives", 16];
-  PrintText["C - "<>ToString[$ComplexCounter]<>" unnecessarily complex antiderivatives", 16];
-  PrintText["D - "<>ToString[$CannotIntegrateCounter]<>" unable to integrate problems", 16];
-  PrintText["E - "<>ToString[$TimeoutCounter]<>" integration timeouts", 16];
-  PrintText["", 16];
-  PrintText["Mathematica results "<>ToString[NumberForm[$SizeRatioTotal/$SizeRatioCounter,{10,2}]]<>" times size of optimal antiderivatives on average.", 16];
-)
-
 
 (* ::Section::Closed:: *)
 (*Rubi Test Functions*)
@@ -211,22 +60,18 @@ TestRubi[testSuite_String, saveFlag_:False] :=
   Block[{$OptimalCounter=0, $SuboptimalCounter=0, $TooLargeCounter=0, $ComplexCounter=0, $CannotIntegrateCounter=0, 
     $TimeoutCounter=0, $InvalidCounter=0, $SizeRatioTotal=0, $SizeRatioCounter=0, Rubi`Unintegrable, Rubi`CannotIntegrate, $ResultNotebook},
   With[{systemName=Rubi`$RubiVersion},
-  $ResultNotebook = CreateDocument[{}, WindowTitle->testSuite, WindowSize->Scaled[1]];
-  Print[systemName<>" Integration Test Results", "Title", 36, True];
+  Print[systemName<>" Integration Test Results"];
   Print[
     "on "<>If[NumberQ[$PercentToTest] && 0<$PercentToTest<100, ToString[$PercentToTest]<>"% of ", ""]<>"the "<>
     If[TrueQ[$TestOnlyElementary], "elementary ", ""]<>
-    "problems in "<>If[testSuite==="", "the entire integration test-suite", "\""<>testSuite<>"\""], "Subtitle", 32, True];
+    "problems in "<>If[testSuite==="", "the entire integration test-suite", "\""<>testSuite<>"\""]];
   If[DirectoryQ[path], Map[TestFileRubi, FileNames["*.m", {path}, Infinity]], TestFileRubi[If[FileExistsQ[path], path, path<>".m"]]];
   WriteRubiTestSummary[];
-  If[TrueQ[saveFlag],
-    SaveAndCloseNotebook[$ResultNotebook, FileNameJoin[{NotebookDirectory[], systemName<>" Integration Test Results", testSuite}], True],
-  Null]]]]]]
+  ]]]]]
 
 
 (* ::Subsection::Closed:: *)
 (*TestFileRubi[filename]*)
-
 
 TestFileRubi::usage = "TestFileRubi[filename] tests Rubi on the integration problems in filename.";
 TestFileRubi[filename_String] := 
@@ -236,6 +81,7 @@ TestFileRubi[filename_String] :=
     Print["Test file " <> filename <> " not found."];
     Null,
   problemlist = Select[problemlist,Function[#=!=Null]];
+  Print[problemlist]
   If[problemlist==={},
     Null,
 
@@ -247,15 +93,11 @@ TestFileRubi[filename_String] :=
       SeedRandom[314159265]; RandomInteger[100000]; RandomInteger[100000];
       problemlist = Part[problemlist,Sort[RandomSample[Range[num],Max[5,Ceiling[num*$PercentToTest/100]]]]];
       num = Length[problemlist];
-      Print["Test results for " <> ToString[num] <> " problems in \"" <> FileNameTake[filename] <> "\"", "Section", 24];
       Print["Testing Rubi on " <> ToString[num] <> " problems in \"" <> FileNameTake[filename] <> "\"."],
-    Print["Test results for the " <> ToString[num] <> " problems in \"" <> FileNameTake[filename] <> "\"", "Section", 24];
     Print["Testing Rubi on the " <> ToString[num] <> " problems in \"" <> FileNameTake[filename] <> "\"."]] );
 
   Monitor[
-    Do[TestProblemRubi[indx, problemlist[[indx]]], {indx, 1, num}],
-    ProgressIndicator[indx, {1, num+1}, ImageSize->{1000,20}]];
-  Print[""]]]]
+    Do[TestProblemRubi[indx, problemlist[[indx]]], {indx, 1, num}], Print["."]]]]]
 
 
 (* ::Subsection::Closed:: *)
@@ -502,68 +344,12 @@ DisplayProblem[num_Integer, integrand_, variable_, message_String] := (
   Print["Problem "<>ToString[num]<>": "<>message, "Subsection"];
   Print[Defer[Integrate[integrand, variable]], "Output"] )
 
-
-(* ::Subsection::Closed:: *)
-(*Print[expn, style, fontsize, center, pagebreak]*)
-
-(*
-Print[expn_, style_String, fontsize_:Null, center_:False, pagebreak_:Automatic] := (
-  SelectionMove[$ResultNotebook, After, Notebook];
-  With[{contents = If[StringQ[expn], expn, BoxData[MakeBoxes[expn]]]},
-  If[IntegerQ[fontsize],
-    If[TrueQ[center],
-      NotebookWrite[$ResultNotebook, Cell[contents, style, FontSize->fontsize, TextAlignment->Center, PageBreakAbove->pagebreak]],
-    NotebookWrite[$ResultNotebook, Cell[contents, style, FontSize->fontsize, PageBreakAbove->pagebreak]]],
-  If[TrueQ[center],
-    NotebookWrite[$ResultNotebook, Cell[contents, style, TextAlignment->Center, PageBreakAbove->pagebreak]],
-  NotebookWrite[$ResultNotebook, Cell[contents, style, PageBreakAbove->pagebreak]]]]] )
-*)
-
 (* ::Subsection::Closed:: *)
 (*PrintText[text, fontsize]*)
-
-
-PrintText[text_String, fontsize_:Null] := (
-  SelectionMove[$ResultNotebook, After, Notebook];
-  If[IntegerQ[fontsize],
-    NotebookWrite[$ResultNotebook, Cell[text, "Text", FontFamily->"Helvetica", FontSize->fontsize]],
-  NotebookWrite[$ResultNotebook, Cell[Style[text, Larger], "Text", FontFamily->"Helvetica"]]] )
-
-
-(* ::Subsection::Closed:: *)
-(*SaveAndCloseNotebook[notebook, filename, closeFlag]*)
-
-
-SaveAndCloseNotebook::usage = 
-  "SaveAndCloseNotebook[notebook, filename] saves notebook as filename.nb and closes notebook.
-   SaveAndCloseNotebook[notebook, filename, True] closes all groups before saving notebook.";
-
-SaveAndCloseNotebook[notebook_, filename_String, closeFlag_:False] := (
-  ( If[TrueQ[closeFlag],
-      SelectionMove[notebook, All, Notebook];
-      FrontEndExecute[FrontEndToken[notebook, "SelectionCloseAllGroups"]];
-      FrontEndExecute[FrontEndToken[notebook, "OpenCloseGroup"]]] );
-  If[Not[DirectoryQ[FileNameDrop[filename]]], CreateDirectory[FileNameDrop[filename]]];
-  NotebookSave[notebook, filename<>".nb"];
-  NotebookClose[notebook];
-  Null )
-
-
-(* ::Subsection::Closed:: *)
-(*Print[message]*)
-
-(*
-Print::usage = "Print[message] displays message on the status bar.";
-Print[message_String] := 
-  If[TrueQ[$Notebooks], 
-    CurrentValue[EvaluationNotebook[], WindowStatusArea] = message;
-    CurrentValue[$ResultNotebook, WindowStatusArea] = message]
-*)
+PrintText[text_String, fontsize_:Null] := Print[text]
 
 (* ::Subsection::Closed:: *)
 (*ComplexFreeQ[expn]*)
-
-
 ComplexFreeQ::usage = "If expn is free of explicit complex numbers in rectangular or polar form, ComplexFreeQ[expn] returns True, else it returns False.";
 ComplexFreeQ[expn_] := 
   FreeQ[expn,Complex] && FreeQ[expn,(-1)^Rational[_,_]]
@@ -571,8 +357,6 @@ ComplexFreeQ[expn_] :=
 
 (* ::Subsection::Closed:: *)
 (*ExpressionType[expn,var]*)
-
-
 ExpressionType[expn_,var_] :=
   If[AtomQ[expn] || FreeQ[expn,var],
     1,
@@ -603,8 +387,6 @@ ExpressionType[expn_,var_] :=
 
 (* ::Subsection::Closed:: *)
 (*Function type predicates*)
-
-
 ElementaryFunctionQ::usage = "ElementaryFunctionQ[func] returns True if func is an elementary function; else it returns False.";
 ElementaryFunctionQ[func_] := 
   MemberQ[{
@@ -660,13 +442,13 @@ IntegrateFunctionQ[func_] :=
 (*Default Values of Control Variables*)
 
 (* Mathics implemented Test Suits *)
-TestMathics[] = TestRubi["1 Algebraic functions"];
+TestMathics[] := TestRubi["1 Algebraic functions"];
 
 End [];
 EndPackage [];
 
 
-$PrintProblems = False;
+$PrintProblems = True;
 $TestOnlyElementary = False;
 $PercentToTest = 100;
 $TimeOutLimit = 120;
