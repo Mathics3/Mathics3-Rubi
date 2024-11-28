@@ -13,7 +13,6 @@ BeginPackage["IntegrationTestProgram`"];
 
 TestRubi::usage = "If <testSuite> is the name of a file in the integration test suite, TestRubi[testSuite] tests Rubi on the problems in <testSuite> and creates a notebook of the deficient results. If <testSuite> is the name of a directory in the integration test suite, TestRubi[testSuite] tests Rubi on the each of the files in <testSuite>. TestRubi[testSuite,True] saves the deficient results as the file testSuite.nb in a directory named \"Rubi Integration Test Results\".";
 TestFileRubi::usage = "TestFileRubi[filename] tests Rubi on the integration problems in filename.";
-TestMathics::usage = "Test all test suits implemented in Mathics.";
 
 $PrintProblems::usage = "If $PrintProblems is True, problems are displayed before they are integrated. It is False by default.";
 $TestOnlyElementary::usage = "If $TestOnlyElementary is True, only problems having elementary integrands AND antiderivatives are tested. It is False by default.";
@@ -439,9 +438,6 @@ IntegrateFunctionQ[func_] :=
 
 (* ::Section::Closed:: *)
 (*Default Values of Control Variables*)
-
-(* Mathics implemented Test Suits *)
-TestMathics[] := TestRubi["1 Algebraic functions"];
 
 End [];
 EndPackage [];
