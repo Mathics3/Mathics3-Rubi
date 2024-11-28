@@ -444,3 +444,6 @@ $PercentToTest = 100;
 $TimeOutLimit = 120;
 $DisplayDeficiencies = True;
 $HideKnownDeficiencies = False;
+(* Set for the tests *)
+$RecursionLimit = 512;
+$IterationLimit = 1000;
