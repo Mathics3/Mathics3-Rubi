@@ -337,11 +337,11 @@ DisplayTestResult[message_String, num_Integer, integrand_, variable_, stepsrequi
 DisplayProblem::usage = "DisplayProblem[num, integrand, variable] displays integration problem number num.";
 DisplayProblem[num_Integer, integrand_, variable_] := (
   Print["Problem "<>ToString[num]<>":"];
-  Print[Defer[Integrate[integrand, variable]]] )
+  Print[Hold[Integrate[integrand, variable]]] )
 
 DisplayProblem[num_Integer, integrand_, variable_, message_String] := (
   Print["Problem "<>ToString[num]<>": "<>message];
-  Print[Defer[Integrate[integrand, variable]]] )
+  Print[Hold[Integrate[integrand, variable]]] )
 
 (* ::Subsection::Closed:: *)
 (*PrintText[text, fontsize]*)
