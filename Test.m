@@ -331,11 +331,11 @@ DisplayTestResult[message_String, num_Integer, integrand_, variable_, stepsrequi
 DisplayProblem::usage = "DisplayProblem[num, integrand, variable] displays integration problem number num.";
 DisplayProblem[num_Integer, integrand_, variable_] := (
   Print["Problem "<>ToString[num]<>":"];
-  Print[Hold[Integrate[integrand, variable]]] )
+  Print[Hold[Int[integrand, variable]]] )
 
 DisplayProblem[num_Integer, integrand_, variable_, message_String] := (
   Print["Problem "<>ToString[num]<>": "<>message];
-  Print[Hold[Integrate[integrand, variable]]] )
+  Print[Hold[Int[integrand, variable]]] )
 
 (* ::Subsection::Closed:: *)
 (*PrintText[text, fontsize]*)
@@ -441,7 +441,7 @@ EndPackage [];
 $PrintProblems = True;
 $TestOnlyElementary = False;
 $PercentToTest = 100;
-$TimeOutLimit = 120;
+$TimeOutLimit = 10;
 $DisplayDeficiencies = True;
 $HideKnownDeficiencies = False;
 (* Set for the tests *)
