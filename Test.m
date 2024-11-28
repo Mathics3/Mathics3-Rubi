@@ -207,11 +207,8 @@ TestProblemRubi[num_, problem_]:=
 
 
 WriteRubiTestSummary[] := (
-  Print["Summary of "<>"Integration Test Results", "Section", 28, False, True];
+  Print["Summary of "<>"Integration Test Results"];
   PrintText[ToString[$OptimalCounter+$SuboptimalCounter+$TooLargeCounter+$ComplexCounter+$CannotIntegrateCounter+$TimeoutCounter+$InvalidCounter]<>" integration problems", 16];
-  Print[PieChart[{$OptimalCounter,$SuboptimalCounter+$TooLargeCounter,$ComplexCounter,$CannotIntegrateCounter,$TimeoutCounter,$InvalidCounter}, 
-		ChartLabels->{"A", "B", "C", "D", "E", "F"}, 
-		ChartStyle->{RGBColor[0,0.8,0],RGBColor[0.7,1,0],Yellow,Orange,Magenta,Red}], "Text", 12];
   PrintText["A - "<>ToString[$OptimalCounter]<>" optimal antiderivatives", 16];
   PrintText["B - "<>ToString[$SuboptimalCounter+$TooLargeCounter]<>" valid but suboptimal antiderivatives", 16];
   PrintText["C - "<>ToString[$ComplexCounter]<>" unnecessarily complex antiderivatives", 16];
@@ -316,8 +313,7 @@ DisplayTestResult[message_String, num_Integer, integrand_, variable_, stepsrequi
     "Optimal(type "<>ToString[ExpressionType[optimal,variable]]<>", "<>
     ToString[LeafCount[optimal]]<>" leaves" <>
     If[IntegerQ[stepsrequired], If[stepsrequired<0, ", ? steps", If[stepsrequired==1, ", 1 step", ", "<>ToString[stepsrequired]<>" steps"]], ""] <>
-    "):"];
-  Print[Style[optimal,Blue], "Output"];
+    "):" <> " " <> ToString[optimal]];
 
   With[{resultsize=LeafCount[result]},
   PrintText[
@@ -325,8 +321,7 @@ DisplayTestResult[message_String, num_Integer, integrand_, variable_, stepsrequi
     ToString[resultsize]<>" leaves" <>
     If[IntegerQ[stepsused], If[stepsused==1, ", 1 step", ", "<>ToString[stepsused]<>" steps"], ""] <>
     "):"<>
-    If[resultsize<20000, "", " Display of huge result suppressed!"]];
-  If[resultsize<20000, Print[result, "Output"]]]]
+    If[resultsize<20000,  " " <> ToString[result], " Display of huge result suppressed!"]];]]
 
 
 (* ::Subsection::Closed:: *)
