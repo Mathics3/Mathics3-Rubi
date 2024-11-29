@@ -177,6 +177,7 @@ LoadRules[FileNameJoin[{"1 Algebraic functions", "1.3 Polynomial products", "1.3
 LoadRules[FileNameJoin[{"1 Algebraic functions", "1.4 Miscellaneous", "1.4.3 Miscellaneous algebraic functions"}]];
 
 (* Required rules from Section 9 *)
+LoadRules[FileNameJoin[{"9 Miscellaneous", "9.1 Integrand simplification rules"}]];
 LoadRules[FileNameJoin[{"9 Miscellaneous", "9.2 Piecewise linear functions"}]];
 LoadRules[FileNameJoin[{"9 Miscellaneous", "9.3 Miscellaneous integration rules"}]];
 
