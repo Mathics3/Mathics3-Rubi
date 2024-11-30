@@ -197,6 +197,13 @@ With[vars_, Verbatim[Condition][expr_, wcond_]] := Condition[With[vars, expr], W
 With[vars_, Verbatim[Condition][expr_, wcond_]] := Condition[Indeterminate, Not[With[vars, wcond]]];
 Protect[With];
 
+(* Select with nulls and three arguments *)
+Unprotect[Select];
+Select[{}, _] := {}
+Select[{}, _, _] := {}
+Select[items_, expr_, n_] := Module[{lst = Select[items, expr]}, Take[lst, Min[n, Length[lst]]]]
+Protect[Select];
+
 (* ::Section:: *)
 (* Define Unintegrable and CannotIntegrate*)
 
