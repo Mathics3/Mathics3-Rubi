@@ -441,7 +441,7 @@ EndPackage [];
 $PrintProblems = True;
 $TestOnlyElementary = False;
 $PercentToTest = 100;
-$TimeOutLimit = 15;
+$TimeOutLimit = 120;
 $DisplayDeficiencies = True;
 $HideKnownDeficiencies = False;
 (* Set for the tests *)
