@@ -446,4 +446,4 @@ $DisplayDeficiencies = True;
 $HideKnownDeficiencies = False;
 (* Set for the tests *)
 $RecursionLimit = 512;
-$IterationLimit = 1000;
+$IterationLimit = 4096;
