@@ -59,6 +59,9 @@ csc::usage = "Inert cosecant function";
 
 Begin["`Private`"];
 
+(* Higher $RecursionLimit needed for FixIntRules[] *)
+$RecursionLimit = 512;
+
 (* Print packages being loaded if $DebugPrint is True*)
 $DebugPrint = True;
 DebugPrint[x_] := If[$DebugPrint == True, Print[x]];
@@ -68,8 +71,12 @@ $rubiDir = Directory[];
 $RubiVersion = StringJoin["Rubi ", Version /. List@@Get[FileNameJoin[{$rubiDir, "PacletInfo.m"}]]];
 Print["Loading " <> $RubiVersion <> " will take a minute or two. In the future this will take less than a second."];
 
+$LoadShowSteps = If[Not[ValueQ[Global`$LoadShowSteps]], True, TrueQ[Global`$LoadShowSteps]];
+
 $ruleDir = FileNameJoin[{$rubiDir, "IntegrationRules"}];
 $utilityPackage = FileNameJoin[{$rubiDir, "IntegrationUtilityFunctions.m"}];
+$stepRoutines = FileNameJoin[{$rubiDir, "ShowStepRoutines.m"}];
+$ruleFormatting = FileNameJoin[{$rubiDir, "ShowStepFormatting.m"}];
 
 RubiClearMemoryImages[] :=
   Module[{files = FileNames["*.mx", {FileNameJoin[{$rubiDir, "Kernel"}]}]},
@@ -181,7 +188,14 @@ LoadRules[FileNameJoin[{"9 Miscellaneous", "9.1 Integrand simplification rules"}
 LoadRules[FileNameJoin[{"9 Miscellaneous", "9.2 Piecewise linear functions"}]];
 LoadRules[FileNameJoin[{"9 Miscellaneous", "9.3 Miscellaneous integration rules"}]];
 
+(* Calculate the rule-count directly after all integration rules, because below there are some more rules added that are not integration rules. *)
+$RuleCount = Length[DownValues[Int]];
+
+If[$LoadShowSteps === True, LoadRules[$stepRoutines]];
+
+Print["Modifying " <> ToString[$RuleCount] <> " integration rules to distribute coefficients over sums..."];
 FixIntRules[];
+Print[""];
 
 (* Fix ReplacePart use *)
 Unprotect[ReplacePart];
@@ -203,6 +217,89 @@ Select[{}, _] := {}
 Select[{}, _, _] := {}
 Select[items_, expr_, n_] := Module[{lst = Select[items, expr]}, Take[lst, Min[n, Length[lst]]]]
 Protect[Select];
+
+If[$LoadShowSteps === True,
+  StatusBarPrint["Modifying " <> ToString[$RuleCount] <> " integration rules to display steps..."];
+  StepFunction[Int];
+  StatusBarPrint[""]];
+
+(* ::Section:: *)
+(* Define Steps, Step and Stats*)
+
+Int::noShowSteps = "To use this function, you need to define $LoadShowSteps=True before loading the Rubi package";
+Steps::negSteps = "Number of steps must be a positive integer.";
+SetAttributes[Steps, {HoldFirst}];
+Options[Steps] = {
+  RubiPrintInformation -> True
+};
+Int::wrngUsage = "Wrong usage of the `1` function. Please use `1`[Int[expr, x]].";
+Steps[Int[expr_, x_], opts : OptionsPattern[]] := Steps[Int[expr, x], $IterationLimit, opts];
+Steps[Int[expr_, x_], n_Integer, OptionsPattern[]] := Module[{result, steps},
+  If[$LoadShowSteps =!= True,
+    Message[Int::noShowSteps];
+    Return[Int[expr, x]]
+  ];
+  {result, steps} = Reap@Block[{$ShowSteps = True},
+    FixedPoint[
+      Function[int,
+        With[{held = ReplaceAll[HoldComplete[int], {Defer[Int] -> Int, Defer[Subst] -> Subst}]},
+          Sow[RubiIntermediateResult[held]];
+          ReleaseHold[held]
+        ]
+      ], Int[expr, x],
+      n - 1
+    ]
+  ];
+  If[OptionValue[RubiPrintInformation] === True,
+    PrintRubiSteps[steps];
+    result,
+    {steps, result}
+  ]
+] /; Head[x] === Symbol && If[TrueQ[n > 0], True, Message[Steps::negSteps]; False];
+Steps[___] := (Message[Int::wrngUsage, Steps]; $Failed);
+
+SetAttributes[Step, {HoldFirst}];
+Options[Step] = {
+  RubiPrintInformation -> True
+};
+Step[Int[expr_, x_], OptionsPattern[]] := Module[
+  {
+    result,
+    step
+  },
+  If[$LoadShowSteps =!= True,
+    Message[Int::noShowSteps];
+    Return[Int[expr, x]]
+  ];
+  {result, step} = Reap@Block[{$ShowSteps = True}, Int[expr, x]];
+  If[OptionValue[RubiPrintInformation] === True,
+    PrintRubiSteps[step];
+    result,
+    {step, result}
+  ]
+] /; Head[x] === Symbol;
+Step[___] := (Message[Int::wrngUsage, Step]; $Failed);
+
+SetAttributes[Stats, {HoldFirst}];
+Options[Stats] = {
+  RubiPrintInformation -> True
+};
+Stats[Int[expr_, x_], OptionsPattern[]] := Block[{$ShowSteps = False, $StepCounter = 0, $RuleList = {}},
+  With[{result = Int[expr, x]},
+    If[$LoadShowSteps =!= True,
+      Message[Int::noShowSteps];
+      Return[result]
+    ];
+    If[OptionValue[RubiPrintInformation] === True,
+      Print@RubiStats@{$StepCounter, Length[$RuleList], LeafCount[expr], LeafCount[result], N[Length[$RuleList] / LeafCount[expr], 4], $RuleList};
+      result,
+      {
+        RubiStats@{$StepCounter, Length[$RuleList], LeafCount[expr], LeafCount[result], N[Length[$RuleList] / LeafCount[expr], 4], $RuleList},
+        result
+      }
+    ]
+  ]] /; Head[x] === Symbol;
+Stats[___] := (Message[Int::wrngUsage, Stats]; $Failed);
 
 (* ::Section:: *)
 (* Define Unintegrable and CannotIntegrate*)
@@ -226,6 +323,7 @@ Unintegrable[u_, x_] :=
 
 
 CannotIntegrate[u_, x_] := Defer[Int][u, x];
+LoadRules[$ruleFormatting];
 Print[""];
 
 End[];
