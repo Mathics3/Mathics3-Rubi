@@ -60,7 +60,7 @@ csc::usage = "Inert cosecant function";
 Begin["`Private`"];
 
 (* Higher $RecursionLimit needed for FixIntRules[] *)
-$RecursionLimit = 512;
+$RecursionLimit = 1024;
 
 (* Print packages being loaded if $DebugPrint is True*)
 $DebugPrint = True;
