@@ -60,7 +60,7 @@ csc::usage = "Inert cosecant function";
 Begin["`Private`"];
 
 (* Higher $RecursionLimit needed for FixIntRules[] *)
-$RecursionLimit = 1024;
+$RecursionLimit = 512;
 
 (* Print packages being loaded if $DebugPrint is True*)
 $DebugPrint = True;
@@ -71,7 +71,9 @@ $rubiDir = Directory[];
 $RubiVersion = StringJoin["Rubi ", Version /. List@@Get[FileNameJoin[{$rubiDir, "PacletInfo.m"}]]];
 Print["Loading " <> $RubiVersion <> " will take a minute or two. In the future this will take less than a second."];
 
-$LoadShowSteps = If[Not[ValueQ[Global`$LoadShowSteps]], True, TrueQ[Global`$LoadShowSteps]];
+(* Disable Steps *)
+(* $LoadShowSteps = If[Not[ValueQ[Global`$LoadShowSteps]], True, TrueQ[Global`$LoadShowSteps]]; *)
+$LoadShowSteps = False
 
 $ruleDir = FileNameJoin[{$rubiDir, "IntegrationRules"}];
 $utilityPackage = FileNameJoin[{$rubiDir, "IntegrationUtilityFunctions.m"}];
@@ -206,10 +208,13 @@ Protect[ReplacePart];
 Refine[x_] := Simplify[x];
 
 (* Fix conditions within With -- needs a full fix within the pattern library *)
-Unprotect[With];
-With[vars_, Verbatim[Condition][expr_, wcond_]] := Condition[With[vars, expr], With[vars, wcond]];
-With[vars_, Verbatim[Condition][expr_, wcond_]] := Condition[Indeterminate, Not[With[vars, wcond]]];
-Protect[With];
+Print["Patching With[]..."];
+dvFixWith = RuleDelayed[Verbatim[HoldPattern][Verbatim[Condition][lhs_,cond_]],With[vars_,Verbatim[Condition][expr_,wcond_]]] :> \
+            RuleDelayed[HoldPattern[Condition[lhs,cond && With[vars,wcond]]],With[vars,expr]];
+dvFixWithNoCond = RuleDelayed[Verbatim[HoldPattern][lhs_],With[vars_,Verbatim[Condition][expr_,wcond_]]] :> \
+            RuleDelayed[HoldPattern[Condition[lhs,With[vars,wcond]]],With[vars,expr]];
+DownValues[Int] = DownValues[Int] /. dvFixWith /. dvFixWithNoCond;
+Print[""];
 
 (* Select with nulls and three arguments *)
 Unprotect[Select];
