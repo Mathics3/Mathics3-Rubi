@@ -23,7 +23,7 @@
 Int[u_^m_.,x_Symbol] :=
   With[{c=Simplify[D[u,x]]},
   1/c \[Star] Subst[Int[x^m,x],x,u]] /;
-FreeQ[m,x] && PiecewiseLinearQ[u,x]
+FreeQ[m,x] && PiecewiseLinearQ[u,x] && NeQ[u^m,x]
 
 
 (* ::Code:: *)
