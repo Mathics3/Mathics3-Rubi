@@ -11,10 +11,13 @@ Mathics-core branch: https://github.com/Mathics3/mathics-core/tree/at-most-one-T
 1. First, check-out and install `mathics` in the branch https://github.com/Mathics3/mathics-core/tree/at-most-one-TimeConstrained.
 1. Then, follow the steps given below.
 
+```
         $ git clone git@github.com:Mathic3/Mathics3-Rubi.git
         $ cd Mathics3-Rubi
         $ mathics
-        
+```
+
+```mathematica
         Mathics 7.0.1dev0
         on CPython 3.11.10 | packaged by conda-forge | (main, Oct 16 2024, 01:27:36) [GCC 13.3.0]
         using SymPy 1.13.3, mpmath 1.3.0, numpy 2.1.3, cython Not installed
@@ -62,6 +65,7 @@ Mathics-core branch: https://github.com/Mathics3/mathics-core/tree/at-most-one-T
 
         Rubi results 1.00 times size of optimal antiderivatives on average.
         Out[3]= None
+```
 
 Sanity test is a small subset of [Rubi's Integration Test Suite](https://rulebasedintegration.org/testProblems.html).
 
