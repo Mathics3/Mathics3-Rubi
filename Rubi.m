@@ -216,13 +216,6 @@ dvFixWithNoCond = RuleDelayed[Verbatim[HoldPattern][lhs_],With[vars_,Verbatim[Co
 DownValues[Int] = DownValues[Int] /. dvFixWith /. dvFixWithNoCond;
 Print[""];
 
-(* Select with nulls and three arguments *)
-Unprotect[Select];
-Select[{}, _] := {}
-Select[{}, _, _] := {}
-Select[items_, expr_, n_] := Module[{lst = Select[items, expr]}, Take[lst, Min[n, Length[lst]]]]
-Protect[Select];
-
 If[$LoadShowSteps === True,
   StatusBarPrint["Modifying " <> ToString[$RuleCount] <> " integration rules to display steps..."];
   StepFunction[Int];

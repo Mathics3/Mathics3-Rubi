@@ -78,7 +78,7 @@ TestFileRubi[filename_String] :=
   If[problemlist===$Failed,
     Print["Test file " <> filename <> " not found."];
     Null,
-  problemlist = Select[problemlist,Function[#=!={}]];
+  problemlist = Select[problemlist,Function[#=!=Null]];
   Print[problemlist]
   If[problemlist==={},
     Null,
