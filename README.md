@@ -1,15 +1,15 @@
 # Introduction
 
-This is a copy of version 4.17 of `Rubi <https://rulebasedintegration.org>`_, a Rule-based Integrator written for WMA.
+This is a copy of version 4.17 of [Rubi](https://rulebasedintegration.org), a Rule-based integration package written for WMA.
 
-This package is under development.
+This Mathics3 package is under development.
 
 Mathics-core branch: https://github.com/Mathics3/mathics-core/tree/at-most-one-TimeConstrained
 
-# Steps
+# Setting up and Running
 
-First, check-out and install `mathics` in the branch https://github.com/Mathics3/mathics-core/tree/at-most-one-TimeConstrained.
-Then, follow the steps given below.
+1. First, check-out and install `mathics` in the branch https://github.com/Mathics3/mathics-core/tree/at-most-one-TimeConstrained.
+1. Then, follow the steps given below.
 
         $ git clone git@github.com:Mathic3/Mathics3-Rubi.git
         $ cd Mathics3-Rubi
@@ -63,4 +63,5 @@ Then, follow the steps given below.
         Rubi results 1.00 times size of optimal antiderivatives on average.
         Out[3]= None
 
-Sanity test is a small subset of Rubi's `Integration Test-suites <https://rulebasedintegration.org/testProblems.html>`_ Mathematica syntax.
+Sanity test is a small subset of [Rubi's Integration Test Suite](https://rulebasedintegration.org/testProblems.html).
+
