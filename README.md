@@ -1,10 +1,11 @@
 # Introduction
 
-This is a copy of version 4.17 of [Rubi](https://rulebasedintegration.org), a Rule-based integration package written for WMA.
+> [!WARNING]  
+> This Mathics3 package is under development.
 
-This Mathics3 package is under development.
+This package is a copy of version 4.17 of [Rubi](https://rulebasedintegration.org), a Rule-based integration package written for WMA, customized for Mathics3.
 
-Mathics-core branch: https://github.com/Mathics3/mathics-core/tree/at-most-one-TimeConstrained
+Mathics-core branch dependency: https://github.com/Mathics3/mathics-core/tree/at-most-one-TimeConstrained
 
 # Setting up and Running
 
