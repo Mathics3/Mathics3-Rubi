@@ -63,10 +63,10 @@ Begin["`Private`"];
 $RecursionLimit = 512;
 
 (* Print packages being loaded if $DebugPrint is True*)
-$DebugPrint = True;
+If[Not[ValueQ[$DebugPrint]], $DebugPrint = True;]
 DebugPrint[x_] := If[$DebugPrint == True, Print[x]];
 
-$rubiDir = Directory[];
+If[Not[ValueQ[$rubiDir]], $rubiDir = Directory[]];
 
 $RubiVersion = StringJoin["Rubi ", Version /. List@@Get[FileNameJoin[{$rubiDir, "PacletInfo.m"}]]];
 Print["Loading " <> $RubiVersion <> " will take a minute or two. In the future this will take less than a second."];
@@ -303,8 +303,8 @@ Stats[___] := (Message[Int::wrngUsage, Stats]; $Failed);
 (* Define Unintegrable and CannotIntegrate*)
 
 Int::definite = "Rubi does not check whether the domain of integration is continuous.";
-Int[u_, {x_Symbol, a_, b_}] := With[{result = Int[u, x]}, 
-	Message[Int::definite]; 
+Int[u_, {x_Symbol, a_, b_}] := With[{result = Int[u, x]},
+	Message[Int::definite];
 	Limit[result, x -> b, Direction -> 1] - Limit[result, x -> a, Direction -> -1]];
 
 Int[{u__}, x_Symbol] := Map[Function[Int[#, x]], {u}];
