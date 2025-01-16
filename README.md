@@ -1,6 +1,6 @@
 # Introduction
 
-> [!WARNING]  
+> [!WARNING]
 > This Mathics3 package is under development.
 
 This package is a copy of version 4.17 of [Rubi](https://rulebasedintegration.org), a Rule-based integration package written for WMA, customized for Mathics3.
@@ -9,8 +9,9 @@ Mathics-core branch dependency: https://github.com/Mathics3/mathics-core/tree/at
 
 # Setting up and Running
 
-1. First, check-out and install `mathics` in the branch https://github.com/Mathics3/mathics-core/tree/at-most-one-TimeConstrained.
-1. Then, follow the steps given below.
+A version of this comes distributed with Mathics3 version 8 or greater.
+
+To develop
 
 ```
         $ git clone git@github.com:Mathic3/Mathics3-Rubi.git
@@ -42,7 +43,7 @@ Mathics-core branch dependency: https://github.com/Mathics3/mathics-core/tree/at
 
 
         Out[1]= None
-        
+
         In[2]:= << Test.m
         Out[2]= None
 
@@ -69,4 +70,3 @@ Mathics-core branch dependency: https://github.com/Mathics3/mathics-core/tree/at
 ```
 
 Sanity test is a small subset of [Rubi's Integration Test Suite](https://rulebasedintegration.org/testProblems.html).
-

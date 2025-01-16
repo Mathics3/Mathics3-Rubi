@@ -1,3 +1,4 @@
+(* -*- wolfram -*- *)
 (* ::Package:: *)
 
 (* Mathematica Package *)
@@ -14,6 +15,12 @@
 (*Rubi (Rule-Based Integrator) Package*)
 
 BeginPackage["Rubi`"];
+
+(* Print packages being loaded if $DebugPrint is True*)
+If[Not[ValueQ[$DebugPrint]], $DebugPrint = True;]
+DebugPrint[x_] := If[$DebugPrint == True, Print[x]];
+
+If[Not[ValueQ[$RubiDir]], $RubiDir = Directory[]];
 
 (* ::Section::Closed:: *)
 (* Usage Messages *)
@@ -62,26 +69,20 @@ Begin["`Private`"];
 (* Higher $RecursionLimit needed for FixIntRules[] *)
 $RecursionLimit = 512;
 
-(* Print packages being loaded if $DebugPrint is True*)
-If[Not[ValueQ[$DebugPrint]], $DebugPrint = True;]
-DebugPrint[x_] := If[$DebugPrint == True, Print[x]];
-
-If[Not[ValueQ[$rubiDir]], $rubiDir = Directory[]];
-
-$RubiVersion = StringJoin["Rubi ", Version /. List@@Get[FileNameJoin[{$rubiDir, "PacletInfo.m"}]]];
+$RubiVersion = StringJoin["Rubi ", Version /. List@@Get[FileNameJoin[{$RubiDir, "PacletInfo.m"}]]];
 Print["Loading " <> $RubiVersion <> " will take a minute or two. In the future this will take less than a second."];
 
 (* Disable Steps *)
 (* $LoadShowSteps = If[Not[ValueQ[Global`$LoadShowSteps]], True, TrueQ[Global`$LoadShowSteps]]; *)
 $LoadShowSteps = False
 
-$ruleDir = FileNameJoin[{$rubiDir, "IntegrationRules"}];
-$utilityPackage = FileNameJoin[{$rubiDir, "IntegrationUtilityFunctions.m"}];
-$stepRoutines = FileNameJoin[{$rubiDir, "ShowStepRoutines.m"}];
-$ruleFormatting = FileNameJoin[{$rubiDir, "ShowStepFormatting.m"}];
+$ruleDir = FileNameJoin[{$RubiDir, "IntegrationRules"}];
+$utilityPackage = FileNameJoin[{$RubiDir, "IntegrationUtilityFunctions.m"}];
+$stepRoutines = FileNameJoin[{$RubiDir, "ShowStepRoutines.m"}];
+$ruleFormatting = FileNameJoin[{$RubiDir, "ShowStepFormatting.m"}];
 
 RubiClearMemoryImages[] :=
-  Module[{files = FileNames["*.mx", {FileNameJoin[{$rubiDir, "Kernel"}]}]},
+  Module[{files = FileNames["*.mx", {FileNameJoin[{$RubiDir, "Kernel"}]}]},
   Map[DeleteFile,files]]
 
 LoadRules::inv = "Could not load file or section: ``";
