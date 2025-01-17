@@ -37,10 +37,10 @@ ExpressionType::usage = "ExpressionType[expn,var] returns expn's type number bas
 (* ::Section::Closed:: *)
 (*Mathematica Test Functions*)
 
+If[Not[ValueQ[$ItegrationTestProgramDir], $IntegrationTestProgramDir = Directory[]]];
 
 Begin["`Private`"];
 
-$IntegrationTestProgramDir = Directory[];
 
 (* ::Section::Closed:: *)
 (*Rubi Test Functions*)
@@ -50,13 +50,13 @@ $IntegrationTestProgramDir = Directory[];
 (*TestRubi[testSuite, saveFlag]*)
 
 
-TestRubi[testSuite_String, saveFlag_:False] := 
+TestRubi[testSuite_String, saveFlag_:False] :=
   If[DownValues[Rubi`Int]==={},
     Print["Need to load Rubi before running TestRubi."],
   With[{path=FileNameJoin[{$IntegrationTestProgramDir, "Integration Test Suite", testSuite}]},
   If[Not[DirectoryQ[path] || FileExistsQ[path] || FileExistsQ[path<>".m"]],
     Print["\""<>testSuite<>"\" is not a test suite file or directory name."],
-  Block[{$OptimalCounter=0, $SuboptimalCounter=0, $TooLargeCounter=0, $ComplexCounter=0, $CannotIntegrateCounter=0, 
+  Block[{$OptimalCounter=0, $SuboptimalCounter=0, $TooLargeCounter=0, $ComplexCounter=0, $CannotIntegrateCounter=0,
     $TimeoutCounter=0, $InvalidCounter=0, $SizeRatioTotal=0, $SizeRatioCounter=0, Rubi`Unintegrable, Rubi`CannotIntegrate, $ResultNotebook},
   With[{systemName=Rubi`$RubiVersion},
   Print[systemName<>" Integration Test Results"];
@@ -72,7 +72,7 @@ TestRubi[testSuite_String, saveFlag_:False] :=
 (* ::Subsection::Closed:: *)
 (*TestFileRubi[filename]*)
 
-TestFileRubi[filename_String] := 
+TestFileRubi[filename_String] :=
   Module[{problemlist, num, indx},
   problemlist = ReadList[filename];
   If[problemlist===$Failed,
@@ -118,13 +118,13 @@ TestProblemRubi[num_, problem_]:=
 
     If[result==="Timed out",
 	  $TimeoutCounter++;
-      DisplayTestResult["Attempted integration timed out after "<>ToString[$TimeOutLimit]<>" seconds.", 
+      DisplayTestResult["Attempted integration timed out after "<>ToString[$TimeOutLimit]<>" seconds.",
         num, integrand, variable, stepsrequired, stepsused, optimal1, "???"],
 
     With[{resultsize=LeafCount[result], optimalsize=LeafCount[optimal1]},
     If[resultsize>200000,
       $TooLargeCounter++;
-      DisplayTestResult["Humongous result has more than 200000 leaves!", 
+      DisplayTestResult["Humongous result has more than 200000 leaves!",
         num, integrand, variable, stepsrequired, Null, optimal1, result],
 
     With[{sizeratio=N[resultsize/optimalsize]},
@@ -133,13 +133,13 @@ TestProblemRubi[num_, problem_]:=
       $SizeRatioCounter++;
       $SizeRatioTotal=1+$SizeRatioTotal;
       If[stepsrequired<0,
-        DisplayTestResult["Result not only optimal but previously unobtained!", 
+        DisplayTestResult["Result not only optimal but previously unobtained!",
           num, integrand, variable, stepsrequired, stepsused, optimal1, result],
       If[stepsused>stepsrequired,
-        DisplayTestResult["Result optimal but "<>ToString[stepsused-stepsrequired]<>" more steps used.", 
+        DisplayTestResult["Result optimal but "<>ToString[stepsused-stepsrequired]<>" more steps used.",
           num, integrand, variable, stepsrequired, stepsused, optimal1, result],
       If[stepsused<stepsrequired && $VersionNumber<11,
-        DisplayTestResult["Result optimal and "<>ToString[stepsrequired-stepsused]<>" fewer steps used.", 
+        DisplayTestResult["Result optimal and "<>ToString[stepsrequired-stepsused]<>" fewer steps used.",
           num, integrand, variable, stepsrequired, stepsused, optimal1, result]]]],
 
     With[{resulttype=ExpressionType[result,variable], optimaltype=ExpressionType[optimal1,variable]},
@@ -147,12 +147,12 @@ TestProblemRubi[num_, problem_]:=
       If[resulttype<=6,
         $ComplexCounter++;
         If[resultsize<=2*optimalsize,
-          DisplayTestResult["Result unnecessarily involves higher level functions.", 
+          DisplayTestResult["Result unnecessarily involves higher level functions.",
             num, integrand, variable, stepsrequired, stepsused, optimal1, result],
-        DisplayTestResult["Result unnecessarily involves higher level functions and "<>ToString[NumberForm[sizeratio,{10,2}]]<>" times size of optimal antiderivative.", 
+        DisplayTestResult["Result unnecessarily involves higher level functions and "<>ToString[NumberForm[sizeratio,{10,2}]]<>" times size of optimal antiderivative.",
           num, integrand, variable, stepsrequired, stepsused, optimal1, result]],
 	  $CannotIntegrateCounter++;
-      DisplayTestResult[If[resulttype==7, "Result is not expressed in closed-form.", "Unable to integrate problem."], 
+      DisplayTestResult[If[resulttype==7, "Result is not expressed in closed-form.", "Unable to integrate problem."],
         num, integrand, variable, stepsrequired, stepsused, optimal1, result]],
 
     If[resulttype<optimaltype,
@@ -160,11 +160,11 @@ TestProblemRubi[num_, problem_]:=
   	  $OptimalCounter++;
         $SizeRatioCounter++;
         $SizeRatioTotal=sizeratio+$SizeRatioTotal;
-        DisplayTestResult["Rubi result verified and simpler than optimal antiderivative.", 
+        DisplayTestResult["Rubi result verified and simpler than optimal antiderivative.",
           num, integrand, variable, stepsrequired, stepsused, optimal1, result],
   	$InvalidCounter++;
       Beep[];
-      DisplayTestResult["Result invalid or unverifable.", 
+      DisplayTestResult["Result invalid or unverifable.",
         num, integrand, variable, stepsrequired, stepsused, optimal1, result]],
 
     $SizeRatioCounter++;
@@ -173,32 +173,32 @@ TestProblemRubi[num_, problem_]:=
       If[ComplexFreeQ[optimal1],
         $ComplexCounter++;
         If[resultsize<=2*optimalsize,
-          DisplayTestResult["Result unnecessarily involves imaginary or complex numbers.", 
+          DisplayTestResult["Result unnecessarily involves imaginary or complex numbers.",
             num, integrand, variable, stepsrequired, stepsused, optimal1, result],
-        DisplayTestResult["Result unnecessarily involves complex numbers and "<>ToString[NumberForm[sizeratio,{10,2}]]<>" times size of optimal antiderivative.", 
+        DisplayTestResult["Result unnecessarily involves complex numbers and "<>ToString[NumberForm[sizeratio,{10,2}]]<>" times size of optimal antiderivative.",
           num, integrand, variable, stepsrequired, stepsused, optimal1, result]],
       If[ValidAntiderivative[result,integrand,variable,100,optimal1],
   	  $OptimalCounter++;
-        DisplayTestResult["Rubi result verified and simpler than optimal antiderivative.", 
+        DisplayTestResult["Rubi result verified and simpler than optimal antiderivative.",
           num, integrand, variable, stepsrequired, stepsused, optimal1, result],
   	$InvalidCounter++;
       Beep[];
-      DisplayTestResult["Result invalid or unverifable.", 
+      DisplayTestResult["Result invalid or unverifable.",
         num, integrand, variable, stepsrequired, stepsused, optimal1, result]]],
 
     If[ $VersionNumber>=11 &&  (* Mathematica 11+ simplifies results differently than earlier versions. *)
-        stepsused<=stepsrequired && 
-        -0.1 <= resultsize/LeafCount[If[optimal2===Null,optimal1,optimal2]]-1 <= 0.1 && 
+        stepsused<=stepsrequired &&
+        -0.1 <= resultsize/LeafCount[If[optimal2===Null,optimal1,optimal2]]-1 <= 0.1 &&
         Simplify[result-If[optimal2===Null,optimal1,optimal2]]===0,
 	  $OptimalCounter++,
 
     If[ValidAntiderivative[result,integrand,variable,100,optimal1],
       $SuboptimalCounter++;
-      DisplayTestResult["Result valid but suboptimal antiderivative.", 
+      DisplayTestResult["Result valid but suboptimal antiderivative.",
         num, integrand, variable, stepsrequired, stepsused, optimal1, result],
 	$InvalidCounter++;
     Beep[];
-    DisplayTestResult["Result invalid or unverifable.", 
+    DisplayTestResult["Result invalid or unverifable.",
       num, integrand, variable, stepsrequired, stepsused, optimal1, result]]]]]]]]]]]]]]]
 
 
@@ -246,18 +246,18 @@ ValidAntiderivative[result_,integrand_,variable_,maxtime_,optimal_] :=
 ValidAntiderivativeTest[result_,integrand_,variable_,maxtime_,optimal_] :=
   Module[{dif=Dif[result,variable]},
     If[Head[result]===Plus,
-      dif=Map[Function[Simplify[Dif[#,variable]]],result]; 
+      dif=Map[Function[Simplify[Dif[#,variable]]],result];
       If[TimeConstrained[PossibleZeroQ[FullSimplify[dif-integrand]],maxtime/4,False],
         True,
       dif=Simplify[dif];
       If[TimeConstrained[PossibleZeroQ[FullSimplify[dif-integrand]],maxtime/4,False],
         True,
-      If[optimal=!=0 && 
+      If[optimal=!=0 &&
          TimeConstrained[PossibleZeroQ[Simplify[dif-If[Head[optimal]===Plus, Simplify[Map[Function[Simplify[Dif[#,variable]]],optimal]], Simplify[Dif[optimal,variable]]]]],
            maxtime/4,False],
         True,
       PossibleZeroQ[FullSimplify[FullSimplify[dif]-integrand]]]]],
-    If[optimal=!=0 && 
+    If[optimal=!=0 &&
        TimeConstrained[PossibleZeroQ[Simplify[dif-If[Head[optimal]===Plus, Simplify[Map[Function[Simplify[Dif[#,variable]]],optimal]], Simplify[Dif[optimal,variable]]]]],
          maxtime/4,False],
       True,
@@ -305,8 +305,8 @@ DisplayTestResult::usage = "DisplayTestResult[message, num, integrand, variable,
 DisplayTestResult[message_String, num_Integer, integrand_, variable_, stepsrequired_, stepsused_, optimal_, result_] :=
   If[Not[TrueQ[$DisplayDeficiencies]] || TrueQ[$HideKnownDeficiencies] && (stepsused===-stepsrequired || stepsrequired===-1 && stepsused===0),
     Null,
-  If[TrueQ[$PrintProblems], 
-    PrintText[message], 
+  If[TrueQ[$PrintProblems],
+    PrintText[message],
     DisplayProblem[num, integrand, variable, message]];
 
   PrintText[
@@ -344,7 +344,7 @@ PrintText[text_String, fontsize_:Null] := Print[text]
 (* ::Subsection::Closed:: *)
 (*ComplexFreeQ[expn]*)
 ComplexFreeQ::usage = "If expn is free of explicit complex numbers in rectangular or polar form, ComplexFreeQ[expn] returns True, else it returns False.";
-ComplexFreeQ[expn_] := 
+ComplexFreeQ[expn_] :=
   FreeQ[expn,Complex] && FreeQ[expn,(-1)^Rational[_,_]]
 
 
@@ -381,46 +381,46 @@ ExpressionType[expn_,var_] :=
 (* ::Subsection::Closed:: *)
 (*Function type predicates*)
 ElementaryFunctionQ::usage = "ElementaryFunctionQ[func] returns True if func is an elementary function; else it returns False.";
-ElementaryFunctionQ[func_] := 
+ElementaryFunctionQ[func_] :=
   MemberQ[{
-	Exp, Log, 
-	Sin, Cos, Tan, Cot, Sec, Csc, 
-	ArcSin, ArcCos, ArcTan, ArcCot, ArcSec, ArcCsc, 
-	Sinh, Cosh, Tanh, Coth, Sech, Csch, 
+	Exp, Log,
+	Sin, Cos, Tan, Cot, Sec, Csc,
+	ArcSin, ArcCos, ArcTan, ArcCot, ArcSec, ArcCsc,
+	Sinh, Cosh, Tanh, Coth, Sech, Csch,
 	ArcSinh, ArcCosh, ArcTanh, ArcCoth, ArcSech, ArcCsch
 },func]
 
 
 SpecialFunctionQ::usage = "SpecialFunctionQ[func] returns True if func is a special function; else it returns False.";
-SpecialFunctionQ[func_] := 
+SpecialFunctionQ[func_] :=
   MemberQ[{
-	Erf, Erfc, Erfi, 
-	FresnelS, FresnelC, 
-	ExpIntegralE, ExpIntegralEi, LogIntegral, 
-	SinIntegral, CosIntegral, SinhIntegral, CoshIntegral, 
-	Gamma, LogGamma, PolyGamma, 
-	Zeta, PolyLog, ProductLog, 
+	Erf, Erfc, Erfi,
+	FresnelS, FresnelC,
+	ExpIntegralE, ExpIntegralEi, LogIntegral,
+	SinIntegral, CosIntegral, SinhIntegral, CoshIntegral,
+	Gamma, LogGamma, PolyGamma,
+	Zeta, PolyLog, ProductLog,
 	EllipticF, EllipticE, EllipticPi, EllipticK
 },func]
 
 
 HypergeometricFunctionQ::usage = "HypergeometricFunctionQ[func] returns True if func is a hypergeometric function; else it returns False.";
-HypergeometricFunctionQ[func_] := 
+HypergeometricFunctionQ[func_] :=
   MemberQ[{Hypergeometric1F1, Hypergeometric2F1, HypergeometricPFQ, LerchPhi, HurwitzLerchPhi}, func]
 
 
 AppellFunctionQ::usage = "AppellFunctionQ[func] returns True if func is a multivariate hypergeometric function; else it returns False.";
-AppellFunctionQ[func_] := 
+AppellFunctionQ[func_] :=
   MemberQ[{AppellF1}, func]
 
 
 OpenFormFunctionQ::usage = "OpenFormFunctionQ[func] returns True if func is an open-form function; else it returns False.";
-OpenFormFunctionQ[func_] := 
+OpenFormFunctionQ[func_] :=
   MemberQ[{Root, RootSum, Function, Slot}, func]
 
 
 IntegrateFunctionQ::usage = "IntegrateFunctionQ[func] returns True if func is an integrate function; else it returns False.";
-IntegrateFunctionQ[func_] := 
+IntegrateFunctionQ[func_] :=
   Not[FreeQ[func, Integrate]] ||
   Not[FreeQ[func, Integral]] ||
   Not[FreeQ[func, Int]] ||
