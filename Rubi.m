@@ -72,6 +72,9 @@ $RecursionLimit = 512;
 $RubiVersion = StringJoin["Rubi ", Version /. List@@Get[FileNameJoin[{$RubiDir, "PacletInfo.m"}]]];
 Print["Loading " <> $RubiVersion <> " will take a minute or two. In the future this will take less than a second."];
 
+(* Elementary function rules *)
+$LoadElementaryFunctionRules = If[Not[ValueQ[Global`$LoadElementaryFunctionRules]], True, TrueQ[Global`$LoadElementaryFunctionRules]];
+
 (* Disable Steps *)
 (* $LoadShowSteps = If[Not[ValueQ[Global`$LoadShowSteps]], True, TrueQ[Global`$LoadShowSteps]]; *)
 $LoadShowSteps = False
@@ -185,6 +188,167 @@ LoadRules[FileNameJoin[{"1 Algebraic functions", "1.3 Polynomial products", "1.3
 LoadRules[FileNameJoin[{"1 Algebraic functions", "1.3 Polynomial products", "1.3.4 P(x) Q(x)^p"}]];
 
 LoadRules[FileNameJoin[{"1 Algebraic functions", "1.4 Miscellaneous", "1.4.3 Miscellaneous algebraic functions"}]];
+
+If[$LoadElementaryFunctionRules===True,
+  LoadRules[FileNameJoin[{"2 Exponentials", "2.1 (c+d x)^m (a+b (F^(g (e+f x)))^n)^p"}]];
+  LoadRules[FileNameJoin[{"2 Exponentials", "2.2 (c+d x)^m (F^(g (e+f x)))^n (a+b (F^(g (e+f x)))^n)^p"}]];
+  LoadRules[FileNameJoin[{"2 Exponentials", "2.3 Miscellaneous exponentials"}]];
+
+  LoadRules[FileNameJoin[{"3 Logarithms", "3.1.1 (a+b log(c x^n))^p"}]];
+  LoadRules[FileNameJoin[{"3 Logarithms", "3.1.2 (d x)^m (a+b log(c x^n))^p"}]];
+  LoadRules[FileNameJoin[{"3 Logarithms", "3.1.3 (d+e x^r)^q (a+b log(c x^n))^p"}]];
+  LoadRules[FileNameJoin[{"3 Logarithms", "3.1.4 (f x)^m (d+e x^r)^q (a+b log(c x^n))^p"}]];
+  (*
+  LoadRules[FileNameJoin[{"3 Logarithms", "3.1.5 u (a+b log(c x^n))^p"}]];
+  LoadRules[FileNameJoin[{"3 Logarithms", "3.3 u (a+b log(c (d+e x)^n))^p"}]];
+  *)
+  LoadRules[FileNameJoin[{"3 Logarithms", "3.4 u (a+b log(c (d+e x^m)^n))^p"}]];
+  LoadRules[FileNameJoin[{"3 Logarithms", "3.2.1 (f+g x)^m (A+B log(e ((a+b x) over (c+d x))^n))^p"}]];
+  LoadRules[FileNameJoin[{"3 Logarithms", "3.2.2 (f+g x)^m (h+i x)^q (A+B log(e ((a+b x) over (c+d x))^n))^p"}]];
+  (*
+  LoadRules[FileNameJoin[{"3 Logarithms", "3.2.3 u log(e (f (a+b x)^p (c+d x)^q)^r)^s"}]];
+  *)
+  LoadRules[FileNameJoin[{"3 Logarithms", "3.5 Miscellaneous logarithms"}]];
+
+  LoadRules[FileNameJoin[{"4 Trig functions", "4.1 Sine", "4.1.0.1 (a sin)^m (b trg)^n"}]];
+  LoadRules[FileNameJoin[{"4 Trig functions", "4.1 Sine", "4.1.0.2 (a trg)^m (b tan)^n"}]];
+  LoadRules[FileNameJoin[{"4 Trig functions", "4.1 Sine", "4.1.0.3 (a csc)^m (b sec)^n"}]];
+  LoadRules[FileNameJoin[{"4 Trig functions", "4.1 Sine", "4.1.1.1 (a+b sin)^n"}]];
+  LoadRules[FileNameJoin[{"4 Trig functions", "4.1 Sine", "4.1.1.2 (g cos)^p (a+b sin)^m"}]];
+  LoadRules[FileNameJoin[{"4 Trig functions", "4.1 Sine", "4.1.1.3 (g tan)^p (a+b sin)^m"}]];
+  LoadRules[FileNameJoin[{"4 Trig functions", "4.1 Sine", "4.1.2.1 (a+b sin)^m (c+d sin)^n"}]];
+  LoadRules[FileNameJoin[{"4 Trig functions", "4.1 Sine", "4.1.2.2 (g cos)^p (a+b sin)^m (c+d sin)^n"}]];
+  LoadRules[FileNameJoin[{"4 Trig functions", "4.1 Sine", "4.1.2.3 (g sin)^p (a+b sin)^m (c+d sin)^n"}]];
+  LoadRules[FileNameJoin[{"4 Trig functions", "4.1 Sine", "4.1.3.1 (a+b sin)^m (c+d sin)^n (A+B sin)"}]];
+  LoadRules[FileNameJoin[{"4 Trig functions", "4.1 Sine", "4.1.4.1 (a+b sin)^m (A+B sin+C sin^2)"}]];
+  LoadRules[FileNameJoin[{"4 Trig functions", "4.1 Sine", "4.1.4.2 (a+b sin)^m (c+d sin)^n (A+B sin+C sin^2)"}]];
+  LoadRules[FileNameJoin[{"4 Trig functions", "4.1 Sine", "4.1.5 trig^m (a cos+b sin)^n"}]];
+  LoadRules[FileNameJoin[{"4 Trig functions", "4.1 Sine", "4.1.6 (a+b cos+c sin)^n"}]];
+  LoadRules[FileNameJoin[{"4 Trig functions", "4.1 Sine", "4.1.7 (d trig)^m (a+b (c sin)^n)^p"}]];
+  LoadRules[FileNameJoin[{"4 Trig functions", "4.1 Sine", "4.1.8 trig^m (a+b cos^p+c sin^q)^n"}]];
+  LoadRules[FileNameJoin[{"4 Trig functions", "4.1 Sine", "4.1.9 trig^m (a+b sin^n+c sin^(2 n))^p"}]];
+  LoadRules[FileNameJoin[{"4 Trig functions", "4.1 Sine", "4.1.10 (c+d x)^m (a+b sin)^n"}]];
+  LoadRules[FileNameJoin[{"4 Trig functions", "4.1 Sine", "4.1.11 (e x)^m (a+b x^n)^p sin"}]];
+  LoadRules[FileNameJoin[{"4 Trig functions", "4.1 Sine", "4.1.12 (e x)^m (a+b sin(c+d x^n))^p"}]];
+  LoadRules[FileNameJoin[{"4 Trig functions", "4.1 Sine", "4.1.13 (d+e x)^m sin(a+b x+c x^2)^n"}]];
+
+  LoadRules[FileNameJoin[{"4 Trig functions", "4.3 Tangent", "4.3.1.1 (a+b tan)^n"}]];
+  LoadRules[FileNameJoin[{"4 Trig functions", "4.3 Tangent", "4.3.1.2 (d sec)^m (a+b tan)^n"}]];
+  LoadRules[FileNameJoin[{"4 Trig functions", "4.3 Tangent", "4.3.1.3 (d sin)^m (a+b tan)^n"}]];
+  LoadRules[FileNameJoin[{"4 Trig functions", "4.3 Tangent", "4.3.2.1 (a+b tan)^m (c+d tan)^n"}]];
+  LoadRules[FileNameJoin[{"4 Trig functions", "4.3 Tangent", "4.3.2.3 (g tan)^p (a+b tan)^m (c+d tan)^n"}]];
+  LoadRules[FileNameJoin[{"4 Trig functions", "4.3 Tangent", "4.3.3.1 (a+b tan)^m (c+d tan)^n (A+B tan)"}]];
+  LoadRules[FileNameJoin[{"4 Trig functions", "4.3 Tangent", "4.3.4.1 (a+b tan)^m (A+B tan+C tan^2)"}]];
+  LoadRules[FileNameJoin[{"4 Trig functions", "4.3 Tangent", "4.3.4.2 (a+b tan)^m (c+d tan)^n (A+B tan+C tan^2)"}]];
+  LoadRules[FileNameJoin[{"4 Trig functions", "4.3 Tangent", "4.3.7 (d trig)^m (a+b (c tan)^n)^p"}]];
+  LoadRules[FileNameJoin[{"4 Trig functions", "4.3 Tangent", "4.3.9 trig^m (a+b tan^n+c tan^(2 n))^p"}]];
+  LoadRules[FileNameJoin[{"4 Trig functions", "4.3 Tangent", "4.3.10 (c+d x)^m (a+b tan)^n"}]];
+  LoadRules[FileNameJoin[{"4 Trig functions", "4.3 Tangent", "4.3.11 (e x)^m (a+b tan(c+d x^n))^p"}]];
+  LoadRules[FileNameJoin[{"4 Trig functions", "4.3 Tangent", "4.3.12 (d+e x)^m tan(a+b x+c x^2)^n"}]];
+
+  LoadRules[FileNameJoin[{"4 Trig functions", "4.5 Secant", "4.5.1.1 (a+b sec)^n"}]];
+  LoadRules[FileNameJoin[{"4 Trig functions", "4.5 Secant", "4.5.1.2 (d sec)^n (a+b sec)^m"}]];
+  LoadRules[FileNameJoin[{"4 Trig functions", "4.5 Secant", "4.5.1.3 (d sin)^n (a+b sec)^m"}]];
+  LoadRules[FileNameJoin[{"4 Trig functions", "4.5 Secant", "4.5.1.4 (d tan)^n (a+b sec)^m"}]];
+  LoadRules[FileNameJoin[{"4 Trig functions", "4.5 Secant", "4.5.2.1 (a+b sec)^m (c+d sec)^n"}]];
+  LoadRules[FileNameJoin[{"4 Trig functions", "4.5 Secant", "4.5.2.2 (g sec)^p (a+b sec)^m (c+d sec)^n"}]];
+  LoadRules[FileNameJoin[{"4 Trig functions", "4.5 Secant", "4.5.3.1 (a+b sec)^m (d sec)^n (A+B sec)"}]];
+  LoadRules[FileNameJoin[{"4 Trig functions", "4.5 Secant", "4.5.4.1 (a+b sec)^m (A+B sec+C sec^2)"}]];
+  LoadRules[FileNameJoin[{"4 Trig functions", "4.5 Secant", "4.5.4.2 (a+b sec)^m (d sec)^n (A+B sec+C sec^2)"}]];
+  LoadRules[FileNameJoin[{"4 Trig functions", "4.5 Secant", "4.5.7 (d trig)^m (a+b (c sec)^n)^p"}]];
+  LoadRules[FileNameJoin[{"4 Trig functions", "4.5 Secant", "4.5.9 trig^m (a+b sec^n+c sec^(2 n))^p"}]];
+  LoadRules[FileNameJoin[{"4 Trig functions", "4.5 Secant", "4.5.10 (c+d x)^m (a+b sec)^n"}]];
+  LoadRules[FileNameJoin[{"4 Trig functions", "4.5 Secant", "4.5.11 (e x)^m (a+b sec(c+d x^n))^p"}]];
+
+  LoadRules[FileNameJoin[{"4 Trig functions", "4.7 Miscellaneous", "4.7.1 Sine normalization rules"}]];
+  LoadRules[FileNameJoin[{"4 Trig functions", "4.7 Miscellaneous", "4.7.2 Tangent normalization rules"}]];
+  LoadRules[FileNameJoin[{"4 Trig functions", "4.7 Miscellaneous", "4.7.3 Secant normalization rules"}]];
+  LoadRules[FileNameJoin[{"4 Trig functions", "4.7 Miscellaneous", "4.7.4 (c trig)^m (d trig)^n"}]];
+  LoadRules[FileNameJoin[{"4 Trig functions", "4.7 Miscellaneous", "4.7.5 Inert trig functions"}]];
+  LoadRules[FileNameJoin[{"4 Trig functions", "4.7 Miscellaneous", "4.7.6 (c+d x)^m trig(a+b x)^n trig(a+b x)^p"}]];
+  LoadRules[FileNameJoin[{"4 Trig functions", "4.7 Miscellaneous", "4.7.7 F^(c (a+b x)) trig(d+e x)^n"}]];
+  LoadRules[FileNameJoin[{"4 Trig functions", "4.7 Miscellaneous", "4.7.8 u trig(a+b log(c x^n))^p"}]];
+  LoadRules[FileNameJoin[{"4 Trig functions", "4.7 Miscellaneous", "4.7.9 Active trig functions"}]];
+
+  LoadRules[FileNameJoin[{"5 Inverse trig functions", "5.1 Inverse sine", "5.1.1 (a+b arcsin(c x))^n"}]];
+  LoadRules[FileNameJoin[{"5 Inverse trig functions", "5.1 Inverse sine", "5.1.2 (d x)^m (a+b arcsin(c x))^n"}]];
+  LoadRules[FileNameJoin[{"5 Inverse trig functions", "5.1 Inverse sine", "5.1.3 (d+e x^2)^p (a+b arcsin(c x))^n"}]];
+  LoadRules[FileNameJoin[{"5 Inverse trig functions", "5.1 Inverse sine", "5.1.4 (f x)^m (d+e x^2)^p (a+b arcsin(c x))^n"}]];
+  LoadRules[FileNameJoin[{"5 Inverse trig functions", "5.1 Inverse sine", "5.1.5 u (a+b arcsin(c x))^n"}]];
+  LoadRules[FileNameJoin[{"5 Inverse trig functions", "5.1 Inverse sine", "5.1.6 Miscellaneous inverse sine"}]];
+
+  LoadRules[FileNameJoin[{"5 Inverse trig functions", "5.3 Inverse tangent", "5.3.1 (a+b arctan(c x^n))^p"}]];
+  LoadRules[FileNameJoin[{"5 Inverse trig functions", "5.3 Inverse tangent", "5.3.2 (d x)^m (a+b arctan(c x^n))^p"}]];
+  LoadRules[FileNameJoin[{"5 Inverse trig functions", "5.3 Inverse tangent", "5.3.3 (d+e x)^m (a+b arctan(c x^n))^p"}]];
+  (*
+  LoadRules[FileNameJoin[{"5 Inverse trig functions", "5.3 Inverse tangent", "5.3.4 u (a+b arctan(c x))^p"}]];
+  *)
+  LoadRules[FileNameJoin[{"5 Inverse trig functions", "5.3 Inverse tangent", "5.3.5 u (a+b arctan(c+d x))^p"}]];
+  LoadRules[FileNameJoin[{"5 Inverse trig functions", "5.3 Inverse tangent", "5.3.6 Exponentials of inverse tangent"}]];
+  LoadRules[FileNameJoin[{"5 Inverse trig functions", "5.3 Inverse tangent", "5.3.7 Miscellaneous inverse tangent"}]];
+
+  LoadRules[FileNameJoin[{"5 Inverse trig functions", "5.5 Inverse secant", "5.5.1 u (a+b arcsec(c x))^n"}]];
+  LoadRules[FileNameJoin[{"5 Inverse trig functions", "5.5 Inverse secant", "5.5.2 Miscellaneous inverse secant"}]];
+
+  LoadRules[FileNameJoin[{"6 Hyperbolic functions", "6.1 Hyperbolic sine", "6.1.10 (c+d x)^m (a+b sinh)^n"}]];
+  LoadRules[FileNameJoin[{"6 Hyperbolic functions", "6.1 Hyperbolic sine", "6.1.11 (e x)^m (a+b x^n)^p sinh"}]];
+  LoadRules[FileNameJoin[{"6 Hyperbolic functions", "6.1 Hyperbolic sine", "6.1.12 (e x)^m (a+b sinh(c+d x^n))^p"}]];
+  LoadRules[FileNameJoin[{"6 Hyperbolic functions", "6.1 Hyperbolic sine", "6.1.13 (d+e x)^m sinh(a+b x+c x^2)^n"}]];
+
+  LoadRules[FileNameJoin[{"6 Hyperbolic functions", "6.3 Hyperbolic tangent", "6.3.10 (c+d x)^m (a+b tanh)^n"}]];
+  LoadRules[FileNameJoin[{"6 Hyperbolic functions", "6.3 Hyperbolic tangent", "6.3.11 (e x)^m (a+b tanh(c+d x^n))^p"}]];
+  LoadRules[FileNameJoin[{"6 Hyperbolic functions", "6.3 Hyperbolic tangent", "6.3.12 (d+e x)^m tanh(a+b x+c x^2)^n"}]];
+
+  LoadRules[FileNameJoin[{"6 Hyperbolic functions", "6.5 Hyperbolic secant", "6.5.10 (c+d x)^m (a+b sech)^n"}]];
+  LoadRules[FileNameJoin[{"6 Hyperbolic functions", "6.5 Hyperbolic secant", "6.5.11 (e x)^m (a+b sech(c+d x^n))^p"}]];
+
+  LoadRules[FileNameJoin[{"6 Hyperbolic functions", "6.7 Miscellaneous", "6.7.6 (c+d x)^m hyper(a+b x)^n hyper(a+b x)^p"}]];
+  LoadRules[FileNameJoin[{"6 Hyperbolic functions", "6.7 Miscellaneous", "6.7.7 F^(c (a+b x)) hyper(d+e x)^n"}]];
+  LoadRules[FileNameJoin[{"6 Hyperbolic functions", "6.7 Miscellaneous", "6.7.8 u hyper(a+b log(c x^n))^p"}]];
+  LoadRules[FileNameJoin[{"6 Hyperbolic functions", "6.7 Miscellaneous", "6.7.9 Active hyperbolic functions"}]];
+
+  LoadRules[FileNameJoin[{"7 Inverse hyperbolic functions", "7.1 Inverse hyperbolic sine", "7.1.1 (a+b arcsinh(c x))^n"}]];
+  LoadRules[FileNameJoin[{"7 Inverse hyperbolic functions", "7.1 Inverse hyperbolic sine", "7.1.2 (d x)^m (a+b arcsinh(c x))^n"}]];
+  LoadRules[FileNameJoin[{"7 Inverse hyperbolic functions", "7.1 Inverse hyperbolic sine", "7.1.3 (d+e x^2)^p (a+b arcsinh(c x))^n"}]];
+  LoadRules[FileNameJoin[{"7 Inverse hyperbolic functions", "7.1 Inverse hyperbolic sine", "7.1.4 (f x)^m (d+e x^2)^p (a+b arcsinh(c x))^n"}]];
+  LoadRules[FileNameJoin[{"7 Inverse hyperbolic functions", "7.1 Inverse hyperbolic sine", "7.1.5 u (a+b arcsinh(c x))^n"}]];
+  LoadRules[FileNameJoin[{"7 Inverse hyperbolic functions", "7.1 Inverse hyperbolic sine", "7.1.6 Miscellaneous inverse hyperbolic sine"}]];
+
+  LoadRules[FileNameJoin[{"7 Inverse hyperbolic functions", "7.2 Inverse hyperbolic cosine", "7.2.1 (a+b arccosh(c x))^n"}]];
+  LoadRules[FileNameJoin[{"7 Inverse hyperbolic functions", "7.2 Inverse hyperbolic cosine", "7.2.2 (d x)^m (a+b arccosh(c x))^n"}]];
+  LoadRules[FileNameJoin[{"7 Inverse hyperbolic functions", "7.2 Inverse hyperbolic cosine", "7.2.3 (d+e x^2)^p (a+b arccosh(c x))^n"}]];
+  LoadRules[FileNameJoin[{"7 Inverse hyperbolic functions", "7.2 Inverse hyperbolic cosine", "7.2.4 (f x)^m (d+e x^2)^p (a+b arccosh(c x))^n"}]];
+  LoadRules[FileNameJoin[{"7 Inverse hyperbolic functions", "7.2 Inverse hyperbolic cosine", "7.2.5 u (a+b arccosh(c x))^n"}]];
+  LoadRules[FileNameJoin[{"7 Inverse hyperbolic functions", "7.2 Inverse hyperbolic cosine", "7.2.6 Miscellaneous inverse hyperbolic cosine"}]];
+
+  LoadRules[FileNameJoin[{"7 Inverse hyperbolic functions", "7.3 Inverse hyperbolic tangent", "7.3.1 (a+b arctanh(c x^n))^p"}]];
+  LoadRules[FileNameJoin[{"7 Inverse hyperbolic functions", "7.3 Inverse hyperbolic tangent", "7.3.2 (d x)^m (a+b arctanh(c x^n))^p"}]];
+  LoadRules[FileNameJoin[{"7 Inverse hyperbolic functions", "7.3 Inverse hyperbolic tangent", "7.3.3 (d+e x)^m (a+b arctanh(c x^n))^p"}]];
+  (*
+  LoadRules[FileNameJoin[{"7 Inverse hyperbolic functions", "7.3 Inverse hyperbolic tangent", "7.3.4 u (a+b arctanh(c x))^p"}]];
+  *)
+  LoadRules[FileNameJoin[{"7 Inverse hyperbolic functions", "7.3 Inverse hyperbolic tangent", "7.3.5 u (a+b arctanh(c+d x))^p"}]];
+  LoadRules[FileNameJoin[{"7 Inverse hyperbolic functions", "7.3 Inverse hyperbolic tangent", "7.3.6 Exponentials of inverse hyperbolic tangent"}]];
+  LoadRules[FileNameJoin[{"7 Inverse hyperbolic functions", "7.3 Inverse hyperbolic tangent", "7.3.7 Miscellaneous inverse hyperbolic tangent"}]];
+
+  LoadRules[FileNameJoin[{"7 Inverse hyperbolic functions", "7.5 Inverse hyperbolic secant", "7.5.1 u (a+b arcsech(c x))^n"}]];
+  LoadRules[FileNameJoin[{"7 Inverse hyperbolic functions", "7.5 Inverse hyperbolic secant", "7.5.2 Miscellaneous inverse hyperbolic secant"}]];
+
+  LoadRules[FileNameJoin[{"8 Special functions", "8.1 Error functions"}]];
+  LoadRules[FileNameJoin[{"8 Special functions", "8.2 Fresnel integral functions"}]];
+  LoadRules[FileNameJoin[{"8 Special functions", "8.3 Exponential integral functions"}]];
+  LoadRules[FileNameJoin[{"8 Special functions", "8.4 Trig integral functions"}]];
+  LoadRules[FileNameJoin[{"8 Special functions", "8.5 Hyperbolic integral functions"}]];
+  LoadRules[FileNameJoin[{"8 Special functions", "8.6 Gamma functions"}]];
+  LoadRules[FileNameJoin[{"8 Special functions", "8.7 Zeta function"}]];
+  (*
+  LoadRules[FileNameJoin[{"8 Special functions", "8.8 Polylogarithm function"}]];
+  *)
+  LoadRules[FileNameJoin[{"8 Special functions", "8.9 Product logarithm function"}]];
+  (*LoadRules[FileNameJoin[{"8 Special functions", "8.10 Bessel functions"}]]; *)
+
+  LoadRules[FileNameJoin[{"9 Miscellaneous", "9.1 Derivative integration rules"}]]
+];
 
 (* Required rules from Section 9 *)
 LoadRules[FileNameJoin[{"9 Miscellaneous", "9.1 Integrand simplification rules"}]];
