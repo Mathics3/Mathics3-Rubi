@@ -7734,11 +7734,8 @@ RuleName[name_] :=
 
 ClearAll[FixIntRules,FixIntRule,FixRhsIntRule]
 
-dvMathicsToMath = RuleDelayed[Verbatim[HoldPattern][Verbatim[Condition][lhs_,cond_]],rhs_] :> RuleDelayed[HoldPattern[lhs],Condition[rhs,cond]];
-dvMathToMathics = RuleDelayed[Verbatim[HoldPattern][lhs_], Verbatim[Condition][rhs_,cond_]] :> RuleDelayed[HoldPattern[Condition[lhs,cond]],rhs];
-
 FixIntRules[] :=
-  (DownValues[Int]=FixIntRules[DownValues[Int] /. dvMathicsToMath] /. dvMathToMathics; Null)
+  (DownValues[Int]=FixIntRules[DownValues[Int]]; Null)
 
 
 FixIntRules[rulelist_] := Block[{Int, Subst, Simp, Star},
