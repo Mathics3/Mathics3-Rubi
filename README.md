@@ -14,8 +14,8 @@ A version of this comes distributed with Mathics3 version 8 or greater.
 To develop
 
 ```
-        $ git clone git@github.com:Mathic3/Mathics3-Rubi.git
-        $ cd Mathics3-Rubi
+        $ git clone git@github.com:Mathic3/Mathics3-Package-Rubi.git
+        $ cd Mathics3-Package-Rubi
         $ mathics
 ```
 

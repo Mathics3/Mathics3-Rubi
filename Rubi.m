@@ -210,11 +210,11 @@ Refine[x_] := Simplify[x];
 
 (* Fix conditions within With -- needs a full fix within the pattern library *)
 Print["Patching With[]..."];
-dvFixWith = RuleDelayed[Verbatim[HoldPattern][Verbatim[Condition][lhs_,cond_]],With[vars_,Verbatim[Condition][expr_,wcond_]]] :> \
-            RuleDelayed[HoldPattern[Condition[lhs,cond && With[vars,wcond]]],With[vars,expr]];
-dvFixWithNoCond = RuleDelayed[Verbatim[HoldPattern][lhs_],With[vars_,Verbatim[Condition][expr_,wcond_]]] :> \
-            RuleDelayed[HoldPattern[Condition[lhs,With[vars,wcond]]],With[vars,expr]];
-DownValues[Int] = DownValues[Int] /. dvFixWith /. dvFixWithNoCond;
+TraceBuiltins[dvFixWith = RuleDelayed[Verbatim[HoldPattern][Verbatim[Condition][lhs_,cond_]],With[vars_,Verbatim[Condition][expr_,wcond_]]] :> \
+    RuleDelayed[HoldPattern[Condition[lhs,cond && With[vars,wcond]]],With[vars,expr]], SortBy->"count"];
+TraceBuiltins[dvFixWithNoCond = RuleDelayed[Verbatim[HoldPattern][lhs_],With[vars_,Verbatim[Condition][expr_,wcond_]]] :> \
+    RuleDelayed[HoldPattern[Condition[lhs,With[vars,wcond]]],With[vars,expr]], SortBy->"count"];
+TraceBuiltins[DownValues[Int] = DownValues[Int] /. dvFixWith /. dvFixWithNoCond, SortBy->"count"];
 Print[""];
 
 If[$LoadShowSteps === True,
