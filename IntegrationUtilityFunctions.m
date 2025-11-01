@@ -4103,13 +4103,13 @@ Star::usage = "Star[u,v] displays as u*v, and returns the product of u and v wit
 
 DownValues[Star]={};
 
-
+(*
 Star::error = "Inert multiplication by zero!";
 Star[u_,v_] := (
   Message[Star::error];
   0 ) /; 
 EqQ[u,0]
-
+*)
 
 Star[u_,v_] := 
   Map[Function[Star[u,#]],v] /; 
