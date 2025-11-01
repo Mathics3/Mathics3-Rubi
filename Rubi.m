@@ -217,6 +217,10 @@ TraceBuiltins[dvFixWithNoCond = RuleDelayed[Verbatim[HoldPattern][lhs_],With[var
 TraceBuiltins[DownValues[Int] = DownValues[Int] /. dvFixWith /. dvFixWithNoCond, SortBy->"count"];
 Print[""];
 
+(* Dummy CheckArguments *)
+CheckArguments[a_, n_] := n == 1;
+CheckArguments[f_[args___], n_] := Length[{args}] == n;
+
 If[$LoadShowSteps === True,
   StatusBarPrint["Modifying " <> ToString[$RuleCount] <> " integration rules to display steps..."];
   StepFunction[Int];
