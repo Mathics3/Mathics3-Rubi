@@ -220,6 +220,7 @@ Print[""];
 (* Dummy CheckArguments *)
 CheckArguments[a_, n_] := n == 1;
 CheckArguments[f_[args___], n_] := Length[{args}] == n;
+SetAttributes[CheckArguments, HoldFirst];
 
 If[$LoadShowSteps === True,
   StatusBarPrint["Modifying " <> ToString[$RuleCount] <> " integration rules to display steps..."];
