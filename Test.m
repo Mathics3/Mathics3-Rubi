@@ -37,7 +37,7 @@ ExpressionType::usage = "ExpressionType[expn,var] returns expn's type number bas
 (* ::Section::Closed:: *)
 (*Mathematica Test Functions*)
 
-If[Not[ValueQ[$ItegrationTestProgramDir], $IntegrationTestProgramDir = Directory[]]];
+If[Not[ValueQ[$ItegrationTestProgramDir]], $IntegrationTestProgramDir = Directory[]];
 
 Begin["`Private`"];
 

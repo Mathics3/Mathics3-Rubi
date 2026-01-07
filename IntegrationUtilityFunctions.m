@@ -363,12 +363,12 @@ IntegralFreeQ[u_] :=
 
 EqQ::usage = "If u-v equals 0, EqQ[u,v] returns True; else it returns False.";
 EqQ[u_,v_] := Quiet[PossibleZeroQ[u-v]] || Refine[u==v]===True
-EqQ[args___] := Null /; CheckArguments[EqQ[args], 2]
+EqQ[args___] := Null (*/; CheckArguments[EqQ[args], 2]*)
 
 
 NeQ::usage = "If u-v equals 0, NeQ[u,v] returns False; else it returns True.";
 NeQ[u_,v_] := Not[Quiet[PossibleZeroQ[u-v]] || Refine[u==v]===True]
-NeQ[args___] := Null /; CheckArguments[NeQ[args], 2]
+NeQ[args___] := Null (*/; CheckArguments[NeQ[args], 2]*)
 
 
 (* ::Subsection::Closed:: *)
@@ -377,22 +377,22 @@ NeQ[args___] := Null /; CheckArguments[NeQ[args], 2]
 
 IGtQ::usage = "n must be a rational number.  If u is an integer and u>n, IGtQ[u,n] returns True; else it returns False.";
 IGtQ[u_,n_] := IntegerQ[u] && u>n
-IGtQ[args___] := Null /; CheckArguments[IGtQ[args], 2]
+IGtQ[args___] := Null (*/; CheckArguments[IGtQ[args], 2]*)
 
 
 ILtQ::usage = "n must be a rational number.  If u is an integer and u<n, ILtQ[u,n] returns True; else it returns False.";
 ILtQ[u_,n_] := IntegerQ[u] && u<n
-ILtQ[args___] := Null /; CheckArguments[ILtQ[args], 2]
+ILtQ[args___] := Null (*/; CheckArguments[ILtQ[args], 2]*)
 
 
 IGeQ::usage = "n must be a rational number.  If u is an integer and u>=n, IGeQ[u,n] returns True; else it returns False.";
 IGeQ[u_,n_] := IntegerQ[u] && u>=n
-IGeQ[args___] := Null /; CheckArguments[IGeQ[args], 2]
+IGeQ[args___] := Null (*/; CheckArguments[IGeQ[args], 2]*)
 
 
 ILeQ::usage = "n must be a rational number.  If u is an integer and u<=n, ILeQ[u,n] returns True; else it returns False.";
 ILeQ[u_,n_] := IntegerQ[u] && u<=n
-ILeQ[args___] := Null /; CheckArguments[ILeQ[args], 2]
+ILeQ[args___] := Null (*/; CheckArguments[ILeQ[args], 2]*)
 
 
 (* ::Subsection::Closed:: *)
@@ -4103,13 +4103,13 @@ Star::usage = "Star[u,v] displays as u*v, and returns the product of u and v wit
 
 DownValues[Star]={};
 
-
+(*
 Star::error = "Inert multiplication by zero!";
 Star[u_,v_] := (
   Message[Star::error];
   0 ) /; 
 EqQ[u,0]
-
+*)
 
 Star[u_,v_] := 
   Map[Function[Star[u,#]],v] /; 
@@ -7734,11 +7734,8 @@ RuleName[name_] :=
 
 ClearAll[FixIntRules,FixIntRule,FixRhsIntRule]
 
-dvMathicsToMath = RuleDelayed[Verbatim[HoldPattern][Verbatim[Condition][lhs_,cond_]],rhs_] :> RuleDelayed[HoldPattern[lhs],Condition[rhs,cond]];
-dvMathToMathics = RuleDelayed[Verbatim[HoldPattern][lhs_], Verbatim[Condition][rhs_,cond_]] :> RuleDelayed[HoldPattern[Condition[lhs,cond]],rhs];
-
 FixIntRules[] :=
-  (DownValues[Int]=FixIntRules[DownValues[Int] /. dvMathicsToMath] /. dvMathToMathics; Null)
+  (DownValues[Int]=FixIntRules[DownValues[Int]]; Null)
 
 
 FixIntRules[rulelist_] := Block[{Int, Subst, Simp, Star},
