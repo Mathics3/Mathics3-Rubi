@@ -164,7 +164,7 @@ TestProblemRubi[num_, problem_]:=
           num, integrand, variable, stepsrequired, stepsused, optimal1, result],
   	$InvalidCounter++;
       Beep[];
-      DisplayTestResult["Result invalid or unverifable.",
+      DisplayTestResult["Result invalid or unverifiable.",
         num, integrand, variable, stepsrequired, stepsused, optimal1, result]],
 
     $SizeRatioCounter++;
@@ -183,7 +183,7 @@ TestProblemRubi[num_, problem_]:=
           num, integrand, variable, stepsrequired, stepsused, optimal1, result],
   	$InvalidCounter++;
       Beep[];
-      DisplayTestResult["Result invalid or unverifable.",
+      DisplayTestResult["Result invalid or unverifiable.",
         num, integrand, variable, stepsrequired, stepsused, optimal1, result]]],
 
     If[ $VersionNumber>=11 &&  (* Mathematica 11+ simplifies results differently than earlier versions. *)
@@ -198,7 +198,7 @@ TestProblemRubi[num_, problem_]:=
         num, integrand, variable, stepsrequired, stepsused, optimal1, result],
 	$InvalidCounter++;
     Beep[];
-    DisplayTestResult["Result invalid or unverifable.",
+    DisplayTestResult["Result invalid or unverifiable.",
       num, integrand, variable, stepsrequired, stepsused, optimal1, result]]]]]]]]]]]]]]]
 
 
